@@ -1,0 +1,12 @@
+@use 'sass:map';
+@use 'abstracts/variables' as v;
+
+// Get color from map
+@function color($color-name) {
+  @if map.has-key(v.$colors, $color-name) {
+    @return map.get(v.$colors, $color-name);
+  } @else {
+    @warn "Color `#{$color-name}` not found.";
+    @return null;
+  }
+}
