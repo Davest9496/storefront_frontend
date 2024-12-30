@@ -1,3 +1,4 @@
+@use 'sass:map';
 // Colors
 $primary: #DF704A !default;
 $secondary: #F8AF85 !default;
@@ -16,6 +17,7 @@ $colors: (
 
 // Typography
 $font-family-base: 'Manrope', sans-serif;
+
 $font-sizes: (
   'h1': 2.5rem,    // 40px
   'h2': 2rem,      // 32px
@@ -27,6 +29,14 @@ $font-sizes: (
   'small': 0.875rem // 14px
 );
 
+// Font weights
+$font-weights: (
+  'light': 300,
+  'normal': 400,
+  'medium': 500,
+  'bold': 700
+);
+
 // Spacing
 $spacers: (
   'xs': 0.25rem,   // 4px
@@ -34,4 +44,12 @@ $spacers: (
   'md': 1rem,      // 16px
   'lg': 1.5rem,    // 24px
   'xl': 3rem       // 48px
+);
+
+// Mobile first breakpoints
+$breakpoints: (
+  'sm': 576px,
+  'md': 768px,
+  'lg': 992px,
+  'xl': 1200px
 );

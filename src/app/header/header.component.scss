@@ -1,0 +1,41 @@
+@use '../styles/abstracts/variables' as v;
+@use '../styles/abstracts/functions' as f;
+
+.header {
+    background-color: f.color('black');
+    padding: 0% 10%;
+
+    &_logo {
+        font-size: f.get-font-size('h4');
+        font-weight: f.get-font-weight('bold');
+        padding: 0;
+        margin: 0;
+    }
+
+    &_nav {
+        display: flex;
+        color: f.color('white');
+        justify-content: space-between;
+        align-items: center;
+        padding: 1% 0;
+        // border-bottom: 0.1px solid f.color-with-opacity('white', 0.3);
+        // background-color: f.color('primary');  
+    }
+    
+    &_links {
+        display: flex;
+        list-style: none;
+        letter-spacing: 2px;
+        font-size: f.get-font-size('small');
+
+            li {
+                margin: 0 10px;
+                text-transform: uppercase;
+            }
+        }
+
+    &_hr {
+        height: .1px;
+        color: f.color-with-opacity('white', .1);
+    }
+}
