@@ -1,15 +1,35 @@
 <header class="header">
-<nav class="header_nav">
-    <h3 class="header_logo">storefront</h3>
-    <ul class="header_links">
-        <li>home</li>
-        <li>speakers</li>
-        <li>headphones</li>
-        <li>earphones</li>
-    </ul>
-    <div class="basket">
-        basket
-    </div>
-</nav>
-<hr class="header_hr">
+    <nav class="header_nav">
+        <button class="header_menu-btn" (click)="toggleMenu()">
+            @if (!isMenuOpen) {
+                <img 
+                    src="assets/shared/tablet/icon-hamburger.svg" 
+                    alt="Open menu"
+                    class="header_menu-icon"
+                />
+            } @else {
+                <span
+                    class="header_menu-icon"
+                >ｘ</span>
+            }
+        </button>
+        
+        <h3 class="header_logo">storefront</h3>
+        
+        <ul class="header_links" [class.active]="isMenuOpen">
+            <li><a href="#">home</a></li>
+            <li><a href="#">speakers</a></li>
+            <li><a href="#">headphones</a></li>
+            <li><a href="#">earphones</a></li>
+        </ul>
+        
+        <button class="header_cart">
+            <img 
+                src="assets/shared/desktop/icon-cart.svg" 
+                alt="Shopping cart" 
+                class="header_cart-icon"
+            >
+        </button>
+    </nav>
+    <hr class="header_hr">
 </header>

@@ -1,15 +1,17 @@
 @use '../styles/abstracts/variables' as v;
 @use '../styles/abstracts/functions' as f;
+@use '../styles/abstracts/mixins' as m;
 
 .header {
     background-color: f.color('black');
-    padding: 0% 10%;
-
-    &_logo {
-        font-size: f.get-font-size('h4');
-        font-weight: f.get-font-weight('bold');
-        padding: 0;
-        margin: 0;
+    padding: 1rem 1.5rem;
+    
+    @include m.medium {
+        padding: 1rem 2.5rem;
+    }
+    
+    @include m.desktop {
+        padding: 1rem 10%;
     }
 
     &_nav {
@@ -17,25 +19,142 @@
         color: f.color('white');
         justify-content: space-between;
         align-items: center;
-        padding: 1% 0;
-        // border-bottom: 0.1px solid f.color-with-opacity('white', 0.3);
-        // background-color: f.color('primary');  
+        height: 4rem;
     }
-    
-    &_links {
-        display: flex;
-        list-style: none;
-        letter-spacing: 2px;
-        font-size: f.get-font-size('small');
 
-            li {
-                margin: 0 10px;
-                text-transform: uppercase;
-            }
+    &_logo {
+        font-size: f.get-font-size('h5');
+        font-weight: f.get-font-weight('bold');
+        margin: 0;
+        color: f.color('white');
+        text-transform: lowercase;
+        
+        @include m.medium {
+            font-size: f.get-font-size('h4');
+        }
+    }
+
+    &_menu-btn {
+        display: block;
+        background: none;
+        border: none;
+        padding: 0.5rem;
+        cursor: pointer;
+        color: f.color('white');
+        transition: opacity 0.2s ease;
+        min-width: 1.5rem;
+        
+        &:hover {
+            opacity: 0.8;
+        }
+        
+        @include m.tablet {
+            display: none;
+        }
+    }
+
+    &_menu-icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 1rem;
+        height: 1rem;
+        font-size: 1.2rem;
+        font-weight: f.get-font-weight('light');
+        transition: transform 0.2s ease;
+
+        img {
+            width: 100%;
+            height: 100%;
+        }
+    }
+
+    &_links {
+        display: none;
+        position: fixed; 
+        top: 4rem;
+        left: 0;
+        right: 0;
+        background-color: f.color('black');
+        padding: 2rem 1.5rem;
+        z-index: 100; 
+        
+        @include m.tablet {
+            display: flex;
+            position: static;
+            background: none;
+            padding: 0;
+            gap: 2.5rem;
+        }
+        
+        &.active {
+            display: block;
         }
 
+        li {
+            list-style: none;
+            margin: 1rem 0;
+            text-align: center;
+            
+            @include m.tablet {
+                margin: 0;
+            }
+            
+            a {
+                color: f.color('white');
+                text-decoration: none;
+                text-transform: uppercase;
+                font-size: f.get-font-size('small');
+                letter-spacing: 2px;
+                transition: color 0.2s ease;
+                
+                &:hover {
+                    color: f.color('primary');
+                }
+            }
+        }
+    }
+
+    &_cart {
+        background: none;
+        border: none;
+        padding: 0.5rem;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        
+        &:hover {
+            opacity: 0.8;
+        }
+    }
+
+    &_cart-icon {
+        width: 1.25rem;
+        height: 1.25rem;
+    }
+
     &_hr {
-        height: .1px;
-        color: f.color-with-opacity('white', .1);
+        height: 1px;
+        border: none;
+        background-color: f.color-with-opacity('white', .2);
+        margin: 0;
+    }
+}
+
+// Menu overlay and active states
+.menu-active {
+    .header_links {
+        box-shadow: 0 4px 6px -1px f.color-with-opacity('dark', 0.1);
+    }
+    
+    &::after {
+        content: '';
+        position: fixed;
+        top: 5rem;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: f.color-with-opacity('dark', 0.5);
+        z-index: 90;
     }
 }
