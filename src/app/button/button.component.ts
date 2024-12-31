@@ -1,11 +1,16 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-button',
-  imports: [],
+  imports: [CommonModule],
   templateUrl: './button.component.html',
-  styleUrl: './button.component.scss'
+  styleUrls: ['./button.component.scss'],
 })
 export class ButtonComponent {
-
+  @Input() variant: 'primary' | 'secondary' | 'outline' | 'dark' = 'primary';
+  @Input() size: 'small' | 'medium' | 'large' = 'medium';
+  @Input() disabled: boolean = false;
+  @Input() fullWidth: boolean = false;
+  @Input() type: 'button' | 'submit' | 'reset' = 'button';
 }

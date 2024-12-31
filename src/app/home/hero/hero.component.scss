@@ -72,20 +72,20 @@
         }
     }
     
-    &_cta {
-        background-color: f.color('primary');
-        border: none;
-        color: f.color('white');
-        cursor: pointer;
-        font-size: f.get-font-size('small');
-        font-weight: f.get-font-weight('bold');
-        letter-spacing: 1px;
-        padding: 1rem 2rem;
-        text-transform: uppercase;
-        transition: background-color 0.2s ease;
+    // &_cta {
+    //     background-color: f.color('primary');
+    //     border: none;
+    //     color: f.color('white');
+    //     cursor: pointer;
+    //     font-size: f.get-font-size('small');
+    //     font-weight: f.get-font-weight('bold');
+    //     letter-spacing: 1px;
+    //     padding: 1rem 2rem;
+    //     text-transform: uppercase;
+    //     transition: background-color 0.2s ease;
         
-        &:hover {
-            background-color: f.color('secondary');
-        }
-    }
+    //     &:hover {
+    //         background-color: f.color('secondary');
+    //     }
+    // }
 }
