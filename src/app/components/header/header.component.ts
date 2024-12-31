@@ -1,12 +1,24 @@
 import { Component, HostListener } from '@angular/core';
+import { RouterModule } from '@angular/router';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss'],
+  standalone: true,
+  imports: [CommonModule, RouterModule],
 })
 export class HeaderComponent {
   isMenuOpen = false;
+
+  // Helper method to close menu
+  closeMenu(): void {
+    if (this.isMenuOpen) {
+      this.isMenuOpen = false;
+      document.body.classList.remove('menu-active');
+    }
+  }
 
   toggleMenu(): void {
     this.isMenuOpen = !this.isMenuOpen;
@@ -17,12 +29,11 @@ export class HeaderComponent {
     }
   }
 
-  // Close menu when screen size changes to tablet
-  @HostListener('window:resize', ['$event'])
+  // Close menu on window resize (tablet and above)
+  @HostListener('window:resize')
   onResize(): void {
-    if (window.innerWidth >= 992 && this.isMenuOpen) {
-      this.isMenuOpen = false;
-      document.body.classList.remove('menu-active');
+    if (window.innerWidth >= 992) {
+      this.closeMenu();
     }
   }
 
@@ -35,8 +46,7 @@ export class HeaderComponent {
       !target.closest('.header_menu-btn') &&
       !target.closest('.header_links')
     ) {
-      this.isMenuOpen = false;
-      document.body.classList.remove('menu-active');
+      this.closeMenu();
     }
   }
 }

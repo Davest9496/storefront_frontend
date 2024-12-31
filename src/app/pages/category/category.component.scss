@@ -1,0 +1,78 @@
+@use '../../styles//abstracts/variables' as v;
+@use '../../styles//abstracts/functions' as f;
+@use '../../styles//abstracts/mixins' as m;
+
+// Main category container styles
+.category {
+  padding: 2rem 1.5rem;
+  
+  @include m.medium {
+    padding: 2rem 2.5rem;
+  }
+  
+  @include m.desktop {
+    padding: 2rem 10%;
+  }
+
+  // Category title styles
+  &_title {
+    color: f.color('black');
+    font-size: f.get-font-size('h4');
+    font-weight: f.get-font-weight('bold');
+    text-align: center;
+    text-transform: uppercase;
+    margin-bottom: 2rem;
+    
+    @include m.medium {
+      font-size: f.get-font-size('h2');
+      margin-bottom: 3rem;
+    }
+  }
+
+  // Container for category items
+  &_items {
+    display: flex;
+    flex-direction: column;
+    gap: 4rem;
+    
+    @include m.medium {
+      gap: 3rem;
+    }
+  }
+}
+
+// Error state styles
+.category_error {
+  padding: 4rem 1.5rem;
+  text-align: center;
+  
+  h2 {
+    color: f.color('black');
+    font-size: f.get-font-size('h4');
+    font-weight: f.get-font-weight('bold');
+    margin-bottom: 1rem;
+  }
+  
+  p {
+    color: f.color-with-opacity('black', 0.5);
+    font-size: f.get-font-size('body');
+    margin-bottom: 2rem;
+  }
+  
+  &-button {
+    background-color: f.color('primary');
+    border: none;
+    color: f.color('white');
+    cursor: pointer;
+    font-size: f.get-font-size('small');
+    font-weight: f.get-font-weight('bold');
+    letter-spacing: 1px;
+    padding: 1rem 2rem;
+    text-transform: uppercase;
+    transition: background-color 0.2s ease;
+    
+    &:hover {
+      background-color: f.color('secondary');
+    }
+  }
+}

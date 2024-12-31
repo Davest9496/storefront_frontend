@@ -1,0 +1,26 @@
+<article class="category-item">
+      <picture class="category-item_image">
+        <source
+          media="(min-width: 1200px)"
+          [srcset]="item.images.desktop"
+        >
+        <source
+          media="(min-width: 768px)"
+          [srcset]="item.images.tablet"
+        >
+        <img
+          [src]="item.images.mobile"
+          [alt]="item.name"
+          class="category-item_img"
+        >
+      </picture>
+
+      <div class="category-item_content">
+        @if (item.isNew) {
+          <p class="category-item_new">New Product</p>
+        }
+        <h3 class="category-item_name">{{ item.name }}</h3>
+        <p class="category-item_description">{{ item.description }}</p>
+        <app-button variant="primary">See Product</app-button>
+      </div>
+    </article>

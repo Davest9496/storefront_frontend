@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { BestGearComponent } from './best-gear.component';
+import { CategoryItemComponent } from './category-item.component';
 
-describe('BestGearComponent', () => {
-  let component: BestGearComponent;
-  let fixture: ComponentFixture<BestGearComponent>;
+describe('CategoryItemComponent', () => {
+  let component: CategoryItemComponent;
+  let fixture: ComponentFixture<CategoryItemComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [BestGearComponent]
+      imports: [CategoryItemComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(BestGearComponent);
+    fixture = TestBed.createComponent(CategoryItemComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

@@ -1,0 +1,37 @@
+<!-- 
+  Main category section that only renders when we have category data.
+  The hasCategory getter ensures type-safe access to category data.
+-->
+<ng-container *ngIf="hasCategory">
+  <section class="category">
+    <!-- Category title using the safe categoryData getter -->
+    <h2 class="category_title">{{ categoryData.name }}</h2>
+
+    <!-- Category items container -->
+    <div class="category_items">
+      <!-- 
+        Iterate through category items using trackById for performance.
+        The categoryData getter ensures type-safe access to the items array.
+      -->
+      <app-category-item 
+        *ngFor="let item of categoryData.items; trackBy: trackById"
+        [item]="item" 
+      />
+    </div>
+  </section>
+</ng-container>
+
+<!-- 
+  Error state that shows when category is not found.
+  This provides a better user experience than showing nothing.
+-->
+<section *ngIf="!hasCategory" class="category_error">
+  <h2>Category Not Found</h2>
+  <p>We couldn't find the category you're looking for.</p>
+  <button 
+    class="category_error-button"
+    (click)="navigateHome()"
+  >
+    Return to Home
+  </button>
+</section>
