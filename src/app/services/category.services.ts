@@ -5,7 +5,7 @@ import { Category } from '../interfaces/category.interface';
   providedIn: 'root',
 })
 export class CategoryService {
-  private readonly categories: Category[] = [
+  private categories: Category[] = [
     {
       name: 'Headphones',
       items: [
@@ -53,7 +53,52 @@ export class CategoryService {
         },
       ],
     },
-    // Add similar structures for Speakers and Earphones categories
+    {
+      name: 'Speakers',
+      items: [
+        {
+          id: 'zx9',
+          name: 'ZX9 Speaker',
+          description:
+            'Upgrade your sound system with the all new ZX9 active speaker. It’s a bookshelf speaker system that offers truly wireless connectivity -- creating new possibilities for more pleasing and practical audio setups.',
+          isNew: true,
+          images: {
+            mobile: 'assets/product-zx9-speaker/mobile/image-product.jpg',
+            tablet: 'assets/product-zx9-speaker/tablet/image-product.jpg',
+            desktop: 'assets/product-zx9-speaker/desktop/image-product.jpg',
+          },
+        },
+        {
+          id: 'zx7',
+          name: 'ZX7 Speaker',
+          description:
+            'Stream high quality sound wirelessly with minimal loss. The ZX7 bookshelf speaker uses high-end audiophile components that represents the top of the line powered speakers for home or studio use.',
+          isNew: false,
+          images: {
+            mobile: 'assets/product-zx7-speaker/mobile/image-product.jpg',
+            tablet: 'assets/product-zx7-speaker/tablet/image-product.jpg',
+            desktop: 'assets/product-zx7-speaker/desktop/image-product.jpg',
+          },
+        },
+      ],
+    },
+    {
+      name: 'Earphones',
+      items: [
+        {
+          id: 'yx1',
+          name: 'YX1 Wireless Earphones',
+          description:
+            'Tailor your listening experience with bespoke dynamic drivers from the new YX1 Wireless Earphones. Enjoy incredible high-fidelity sound even in noisy environments with its active noise cancellation feature.',
+          isNew: true,
+          images: {
+            mobile: 'assets/product-yx1-earphones/mobile/image-product.jpg',
+            tablet: 'assets/product-yx1-earphones/tablet/image-product.jpg',
+            desktop: 'assets/product-yx1-earphones/desktop/image-product.jpg',
+          },
+        },
+      ],
+    },
   ];
 
   getCategories(): Category[] {
