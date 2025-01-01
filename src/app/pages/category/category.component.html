@@ -13,12 +13,13 @@
   </div>
 </section>
 
+<!-- Error state shown when category is not found -->
 <section *ngIf="!hasCategory" class="category_error">
   <h2>Category Not Found</h2>
   <p>We couldn't find the category you're looking for.</p>
   <button 
     class="category_error-button"
-    (click)="navigateHome()"
+    routerLink="/"
   >
     Return to Home
   </button>
