@@ -1,7 +1,8 @@
+// category-item.component.ts
 import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ButtonComponent } from '../../../components/button/button.component';
 import { CategoryItem } from '../../../interfaces/category.interface';
+import { ButtonComponent } from '../../../components/button/button.component';
 
 @Component({
   selector: 'app-category-item',
