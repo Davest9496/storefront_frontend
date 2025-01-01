@@ -4,17 +4,17 @@
 
 .header {
     background-color: f.color('black');
-    padding: 1rem 1.5rem;
+    padding: 0 1.5rem;
     position: sticky;
     top: 0;
     z-index: 1000;
     
     @include m.medium {
-        padding: 1rem 2.5rem;
+        padding: 0 2.5rem;
     }
     
     @include m.desktop {
-        padding: 1rem 10%;
+        padding: 0 10%;
     }
 
     &_nav {
@@ -23,6 +23,7 @@
         justify-content: space-between;
         align-items: center;
         height: 4rem;
+        position: relative;
     }
 
     &_logo {
@@ -142,6 +143,8 @@
         border: none;
         background-color: f.color-with-opacity('white', .1);
         margin: 0;
+        // bottom: 0;
+        // position: absolute;
     }
 }
 
