@@ -5,6 +5,9 @@
 .header {
     background-color: f.color('black');
     padding: 1rem 1.5rem;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
     
     @include m.medium {
         padding: 1rem 2.5rem;
@@ -136,7 +139,7 @@
     &_hr {
         height: 1px;
         border: none;
-        background-color: f.color-with-opacity('white', .2);
+        background-color: f.color-with-opacity('white', .1);
         margin: 0;
     }
 }

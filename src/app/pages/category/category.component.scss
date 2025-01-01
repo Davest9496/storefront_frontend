@@ -28,7 +28,7 @@
     margin: 0;
     
     @include m.medium {
-      font-size: f.get-font-size('h2');
+      font-size: f.get-font-size('h3');
     }
   }
 

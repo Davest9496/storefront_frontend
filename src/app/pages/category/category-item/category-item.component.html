@@ -14,13 +14,14 @@
       [alt]="item.name"
       class="category-item_img"
     >
+
+      @if (item.isNew) {
+      <p class="category-item_new">NEW PRODUCT</p>
+    }
   </picture>
 
   <div class="category-item_content">
-    @if (item.isNew) {
-      <p class="category-item_new">NEW PRODUCT</p>
-    }
-    <h2 class="category-item_name">{{ item.name }}</h2>
+    <h3 class="category-item_name">{{ item.name }}</h3>
     <p class="category-item_description">{{ item.description }}</p>
     <app-button variant="primary">SEE PRODUCT</app-button>
   </div>
