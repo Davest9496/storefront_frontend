@@ -54,24 +54,59 @@
     </ul>
   </div>
 
-  <!-- Gallery Section -->
-  <div class="product_gallery">
-    <picture class="product_gallery-item">
-      <source [srcset]="product.gallery.first.desktop" media="(min-width: 1200px)">
-      <source [srcset]="product.gallery.first.tablet" media="(min-width: 768px)">
-      <img [src]="product.gallery.first.mobile" alt="Gallery image 1">
+ <!-- Gallery Section -->
+<div class="product_gallery">
+  <div class="product_gallery-grid">
+    <!-- First Gallery Image -->
+    <picture class="product_gallery-item product_gallery-item--small">
+      <source 
+        [srcset]="'assets/product-' + product.id + '-' + product.category.toLowerCase() + '/desktop/image-gallery-1.jpg'"
+        media="(min-width: 1200px)"
+      >
+      <source 
+        [srcset]="'assets/product-' + product.id + '-' + product.category.toLowerCase() + '/tablet/image-gallery-1.jpg'"
+        media="(min-width: 768px)"
+      >
+      <img 
+        [src]="'assets/product-' + product.id + '-' + product.category.toLowerCase() + '/mobile/image-gallery-1.jpg'"
+        [alt]="product.name + ' gallery image 1'"
+        class="product_gallery-img"
+      >
     </picture>
 
-    <picture class="product_gallery-item">
-      <source [srcset]="product.gallery.second.desktop" media="(min-width: 1200px)">
-      <source [srcset]="product.gallery.second.tablet" media="(min-width: 768px)">
-      <img [src]="product.gallery.second.mobile" alt="Gallery image 2">
+    <!-- Second Gallery Image -->
+    <picture class="product_gallery-item product_gallery-item--small">
+      <source 
+        [srcset]="'assets/product-' + product.id + '-' + product.category.toLowerCase() + '/desktop/image-gallery-2.jpg'"
+        media="(min-width: 1200px)"
+      >
+      <source 
+        [srcset]="'assets/product-' + product.id + '-' + product.category.toLowerCase() + '/tablet/image-gallery-2.jpg'"
+        media="(min-width: 768px)"
+      >
+      <img 
+        [src]="'assets/product-' + product.id + '-' + product.category.toLowerCase() + '/mobile/image-gallery-2.jpg'"
+        [alt]="product.name + ' gallery image 2'"
+        class="product_gallery-img"
+      >
     </picture>
 
-    <picture class="product_gallery-item">
-      <source [srcset]="product.gallery.third.desktop" media="(min-width: 1200px)">
-      <source [srcset]="product.gallery.third.tablet" media="(min-width: 768px)">
-      <img [src]="product.gallery.third.mobile" alt="Gallery image 3">
+    <!-- Third Gallery Image -->
+    <picture class="product_gallery-item product_gallery-item--large">
+      <source 
+        [srcset]="'assets/product-' + product.id + '-' + product.category.toLowerCase() + '/desktop/image-gallery-3.jpg'"
+        media="(min-width: 1200px)"
+      >
+      <source 
+        [srcset]="'assets/product-' + product.id + '-' + product.category.toLowerCase() + '/tablet/image-gallery-3.jpg'"
+        media="(min-width: 768px)"
+      >
+      <img 
+        [src]="'assets/product-' + product.id + '-' + product.category.toLowerCase() + '/mobile/image-gallery-3.jpg'"
+        [alt]="product.name + ' gallery image 3'"
+        class="product_gallery-img"
+      >
     </picture>
   </div>
+</div>
 </div>
