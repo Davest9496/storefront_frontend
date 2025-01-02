@@ -15,6 +15,17 @@ export class CategoryService {
           description:
             'The new XX99 Mark II headphones is the pinnacle of pristine audio. It redefines your premium headphone experience by reproducing the balanced depth and precision of studio-quality sound.',
           price: 45,
+          features: [
+            'Featuring a genuine leather head strap and premium earcups, these headphones deliver superior comfort for those who like to enjoy endless listening. It includes intuitive controls designed for any situation. Whether you are taking a business call or just in your own personal space, the auto on/off and pause features ensure that you will never miss a beat.',
+            'The advanced Active Noise Cancellation with built-in equalizer allow you to experience your audio world on your terms. It lets you enjoy your audio in peace, but quickly interact with your surroundings when you need to. Combined with Bluetooth 5.0 compliant connectivity and 17 hour battery life, the XX99 Mark II headphones gives you superior sound, cutting-edge technology, and a modern design aesthetic.',
+          ],
+          includes: [
+            { quantity: 1, item: 'Headphone Unit' },
+            { quantity: 2, item: 'Replacement Earcups' },
+            { quantity: 1, item: 'User Manual' },
+            { quantity: 1, item: '3.5mm 5mm Audio Cable' },
+            { quantity: 1, item: 'Travel Bag' },
+          ],
           isNew: true,
           images: {
             mobile:
@@ -31,6 +42,17 @@ export class CategoryService {
           description:
             'As the gold standard for headphones, the classic XX99 Mark I offers detailed and accurate audio reproduction for audiophiles, mixing engineers, and music aficionados alike in studios and on the go.',
           price: 45,
+          features: [
+            'The XX99 Mark I headphones offer a comfortable fit with their padded headband and earcups. They provide excellent sound isolation and a balanced sound profile, making them ideal for both casual listening and professional use.',
+            'With a durable build and a detachable cable, the XX99 Mark I headphones are designed to last. They come with a carrying case for easy transport and storage.',
+          ],
+          includes: [
+            { quantity: 1, item: 'Headphone Unit' },
+            { quantity: 1, item: 'Replacement Earcups' },
+            { quantity: 1, item: 'User Manual' },
+            { quantity: 1, item: '3.5mm Audio Cable' },
+            { quantity: 1, item: 'Carrying Case' },
+          ],
           isNew: false,
           images: {
             mobile:
@@ -47,6 +69,16 @@ export class CategoryService {
           description:
             'Enjoy your audio almost anywhere and customize it to your specific tastes with the XX59 headphones. The stylish yet durable versatile wireless headset is a brilliant companion at home or on the move.',
           price: 45,
+          features: [
+            'The XX59 headphones offer a sleek design and a comfortable fit. They provide a balanced sound profile with deep bass and clear highs, making them suitable for a wide range of music genres.',
+            'With a long battery life and Bluetooth connectivity, the XX59 headphones are perfect for on-the-go listening. They also come with a built-in microphone for hands-free calls.',
+          ],
+          includes: [
+            { quantity: 1, item: 'Headphone Unit' },
+            { quantity: 1, item: 'User Manual' },
+            { quantity: 1, item: '3.5mm Audio Cable' },
+            { quantity: 1, item: 'Charging Cable' },
+          ],
           isNew: false,
           images: {
             mobile: 'assets/product-xx59-headphones/mobile/image-product.jpg',
@@ -65,6 +97,17 @@ export class CategoryService {
           description:
             'Upgrade your sound system with the all new ZX9 active speaker. It’s a bookshelf speaker system that offers truly wireless connectivity -- creating new possibilities for more pleasing and practical audio setups.',
           price: 45,
+          features: [
+            'The ZX9 speaker offers a powerful sound experience with its high-fidelity drivers and advanced acoustic design. It supports wireless connectivity, allowing you to stream music from your devices with ease.',
+            'With a sleek and modern design, the ZX9 speaker fits seamlessly into any home decor. It also includes a remote control for convenient operation.',
+          ],
+          includes: [
+            { quantity: 2, item: 'Speaker Units' },
+            { quantity: 1, item: 'Remote Control' },
+            { quantity: 1, item: 'User Manual' },
+            { quantity: 1, item: 'Power Cable' },
+            { quantity: 2, item: 'Speaker Stands' },
+          ],
           isNew: true,
           images: {
             mobile: 'assets/product-zx9-speakers/mobile/image-product.jpg',
@@ -78,6 +121,16 @@ export class CategoryService {
           description:
             'Stream high quality sound wirelessly with minimal loss. The ZX7 bookshelf speaker uses high-end audiophile components that represents the top of the line powered speakers for home or studio use.',
           price: 48,
+          features: [
+            'The ZX7 speaker delivers exceptional sound quality with its high-performance drivers and advanced crossover network. It supports both wired and wireless connections, giving you flexibility in your audio setup.',
+            'With a classic design and premium build quality, the ZX7 speaker is a great addition to any audio enthusiast’s collection. It also includes a remote control for easy operation.',
+          ],
+          includes: [
+            { quantity: 2, item: 'Speaker Units' },
+            { quantity: 1, item: 'Remote Control' },
+            { quantity: 1, item: 'User Manual' },
+            { quantity: 1, item: 'Power Cable' },
+          ],
           isNew: false,
           images: {
             mobile: 'assets/product-zx7-speakers/mobile/image-product.jpg',
@@ -96,6 +149,17 @@ export class CategoryService {
           description:
             'Tailor your listening experience with bespoke dynamic drivers from the new YX1 Wireless Earphones. Enjoy incredible high-fidelity sound even in noisy environments with its active noise cancellation feature.',
           price: 45,
+          features: [
+            'The YX1 wireless earphones offer a comfortable and secure fit with their ergonomic design and multiple ear tip sizes. They provide high-fidelity sound with deep bass and clear highs, making them perfect for music lovers.',
+            'With active noise cancellation and a long battery life, the YX1 earphones let you enjoy your music without distractions. They also come with a charging case for convenient on-the-go charging.',
+          ],
+          includes: [
+            { quantity: 1, item: 'Earphone Unit' },
+            { quantity: 3, item: 'Ear Tip Sizes' },
+            { quantity: 1, item: 'User Manual' },
+            { quantity: 1, item: 'Charging Case' },
+            { quantity: 1, item: 'USB-C Charging Cable' },
+          ],
           isNew: true,
           images: {
             mobile: 'assets/product-yx1-earphones/mobile/image-product.jpg',

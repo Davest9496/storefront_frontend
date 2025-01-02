@@ -6,9 +6,9 @@ export interface Product {
   description: string;
   price: number;
   isNew: boolean;
-  features: string;
+  features: string[];
   includes: BoxItem[];
-  gallery: Gallery;
+  // gallery: Gallery;
   images: {
     mobile: string;
     tablet: string;
@@ -19,22 +19,4 @@ export interface Product {
 export interface BoxItem {
   quantity: number;
   item: string;
-}
-
-export interface Gallery {
-  first: {
-    mobile: string;
-    tablet: string;
-    desktop: string;
-  };
-  second: {
-    mobile: string;
-    tablet: string;
-    desktop: string;
-  };
-  third: {
-    mobile: string;
-    tablet: string;
-    desktop: string;
-  };
 }

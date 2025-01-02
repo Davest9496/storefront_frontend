@@ -37,15 +37,18 @@
     </div>
   </div>
 
+  <div class="product_content-wrapper">
   <!-- Features Section -->
   <div class="product_features">
     <h2>FEATURES</h2>
-    <p>{{ product.features }}</p>
+    <article *ngFor="let feature of product.features">
+      <p>{{ feature }}</p>
+    </article>
   </div>
 
   <!-- In The Box Section -->
   <div class="product_box">
-    <h2>IN THE BOX</h2>
+    <h2 class="product_box-title">IN THE BOX</h2>
     <ul class="product_items">
       <li *ngFor="let item of product.includes">
         <span class="product_quantity-label">{{ item.quantity }}x</span>
@@ -53,6 +56,7 @@
       </li>
     </ul>
   </div>
+</div>
 
  <!-- Gallery Section -->
 <div class="product_gallery">
@@ -110,3 +114,4 @@
   </div>
 </div>
 </div>
+<app-menu/>
