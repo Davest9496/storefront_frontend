@@ -1,0 +1,233 @@
+// src/app/pages/product/product-details.component.scss
+
+@use '../../styles/abstracts/variables' as v;
+@use '../../styles/abstracts/functions' as f;
+@use '../../styles/abstracts/mixins' as m;
+
+.product {
+  padding: 1.5rem;
+  
+  @include m.medium {
+    padding: 2.5rem;
+  }
+  
+  @include m.desktop {
+    padding: 3rem 10%;
+  }
+
+  // Back Button
+  &_back {
+    background: none;
+    border: none;
+    color: f.color-with-opacity('black', 0.5);
+    cursor: pointer;
+    font-size: f.get-font-size('body');
+    margin-bottom: 1.5rem;
+    padding: 0;
+    
+    &:hover {
+      color: f.color('primary');
+    }
+  }
+
+  // Product Header
+  &_header {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    margin-bottom: 5rem;
+    
+    @include m.medium {
+      flex-direction: row;
+      gap: 4rem;
+      align-items: center;
+    }
+  }
+
+  &_image {
+    display: block;
+    width: 100%;
+    
+    img {
+      width: 100%;
+      height: auto;
+      border-radius: 0.5rem;
+    }
+    
+    @include m.medium {
+      flex: 1;
+    }
+  }
+
+  &_info {
+    @include m.medium {
+      flex: 1;
+    }
+  }
+
+  &_new {
+    color: f.color('primary');
+    display: block;
+    font-size: f.get-font-size('small');
+    letter-spacing: 0.5rem;
+    margin-bottom: 1.5rem;
+    text-transform: uppercase;
+  }
+
+  &_name {
+    font-size: f.get-font-size('h4');
+    font-weight: f.get-font-weight('bold');
+    margin-bottom: 1.5rem;
+    
+    @include m.medium {
+      font-size: f.get-font-size('h2');
+    }
+  }
+
+  &_description {
+    color: f.color-with-opacity('black', 0.5);
+    font-size: f.get-font-size('body');
+    line-height: 1.67;
+    margin-bottom: 2rem;
+  }
+
+  &_price {
+    font-size: f.get-font-size('h5');
+    font-weight: f.get-font-weight('bold');
+    margin-bottom: 2rem;
+  }
+
+  // Cart Section
+  &_cart {
+    display: flex;
+    gap: 1rem;
+  }
+
+  &_quantity {
+    background-color: #f1f1f1;
+    display: flex;
+    align-items: center;
+    
+    button {
+      background: none;
+      border: none;
+      color: f.color-with-opacity('black', 0.5);
+      cursor: pointer;
+      font-size: f.get-font-size('h6');
+      padding: 1rem 1.5rem;
+      
+      &:hover {
+        color: f.color('primary');
+      }
+    }
+    
+    span {
+      font-size: f.get-font-size('body');
+      font-weight: f.get-font-weight('bold');
+      width: 2rem;
+      text-align: center;
+    }
+  }
+
+  &_add {
+    background-color: f.color('primary');
+    border: none;
+    color: f.color('white');
+    cursor: pointer;
+    font-size: f.get-font-size('small');
+    font-weight: f.get-font-weight('bold');
+    letter-spacing: 0.1rem;
+    padding: 1rem 2rem;
+    text-transform: uppercase;
+    
+    &:hover {
+      background-color: f.color('secondary');
+    }
+  }
+
+  // Features Section
+  &_features {
+    margin-bottom: 5rem;
+    
+    h2 {
+      font-size: f.get-font-size('h5');
+      font-weight: f.get-font-weight('bold');
+      margin-bottom: 1.5rem;
+      
+      @include m.medium {
+        font-size: f.get-font-size('h3');
+      }
+    }
+    
+    p {
+      color: f.color-with-opacity('black', 0.5);
+      font-size: f.get-font-size('body');
+      line-height: 1.67;
+      white-space: pre-line;
+    }
+  }
+
+  // In The Box Section
+  &_box {
+    margin-bottom: 5rem;
+    
+    @include m.medium {
+      display: flex;
+      gap: 4rem;
+    }
+    
+    h2 {
+      font-size: f.get-font-size('h5');
+      font-weight: f.get-font-weight('bold');
+      margin-bottom: 1.5rem;
+      
+      @include m.medium {
+        font-size: f.get-font-size('h3');
+        margin-bottom: 0;
+      }
+    }
+  }
+
+  &_items {
+    list-style: none;
+    
+    li {
+      margin-bottom: 0.5rem;
+    }
+  }
+
+  &_quantity-label {
+    color: f.color('primary');
+    font-weight: f.get-font-weight('bold');
+    margin-right: 1rem;
+  }
+
+  &_item-name {
+    color: f.color-with-opacity('black', 0.5);
+  }
+
+  // Gallery Section
+  &_gallery {
+    display: grid;
+    gap: 1.5rem;
+    grid-template-columns: 1fr;
+    margin-bottom: 5rem;
+    
+    @include m.medium {
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: 1fr 1fr;
+      
+      picture:last-child {
+        grid-column: 2;
+        grid-row: 1 / span 2;
+      }
+    }
+    
+    img {
+      border-radius: 0.5rem;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+}

@@ -1,0 +1,77 @@
+<div class="product" *ngIf="product">
+  <!-- Back Button -->
+  <button class="product_back" (click)="goBack()">Go Back</button>
+
+  <!-- Product Header -->
+  <div class="product_header">
+    <picture class="product_image">
+      <source 
+        [srcset]="product.images.desktop" 
+        media="(min-width: 1200px)"
+      >
+      <source 
+        [srcset]="product.images.tablet" 
+        media="(min-width: 768px)"
+      >
+      <img 
+        [src]="product.images.mobile" 
+        [alt]="product.name"
+      >
+    </picture>
+
+    <div class="product_info">
+      <span class="product_new" *ngIf="product.isNew">NEW PRODUCT</span>
+      <h1 class="product_name">{{ product.name }}</h1>
+      <p class="product_description">{{ product.description }}</p>
+      <p class="product_price">$ {{ product.price.toLocaleString() }}</p>
+
+      <!-- Add to Cart Section -->
+      <div class="product_cart">
+        <div class="product_quantity">
+          <button (click)="decrementQuantity()">-</button>
+          <span>{{ quantity }}</span>
+          <button (click)="incrementQuantity()">+</button>
+        </div>
+        <button class="product_add">ADD TO CART</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Features Section -->
+  <div class="product_features">
+    <h2>FEATURES</h2>
+    <p>{{ product.features }}</p>
+  </div>
+
+  <!-- In The Box Section -->
+  <div class="product_box">
+    <h2>IN THE BOX</h2>
+    <ul class="product_items">
+      <li *ngFor="let item of product.includes">
+        <span class="product_quantity-label">{{ item.quantity }}x</span>
+        <span class="product_item-name">{{ item.item }}</span>
+      </li>
+    </ul>
+  </div>
+
+  <!-- Gallery Section -->
+  <div class="product_gallery">
+    <picture class="product_gallery-item">
+      <source [srcset]="product.gallery.first.desktop" media="(min-width: 1200px)">
+      <source [srcset]="product.gallery.first.tablet" media="(min-width: 768px)">
+      <img [src]="product.gallery.first.mobile" alt="Gallery image 1">
+    </picture>
+
+    <picture class="product_gallery-item">
+      <source [srcset]="product.gallery.second.desktop" media="(min-width: 1200px)">
+      <source [srcset]="product.gallery.second.tablet" media="(min-width: 768px)">
+      <img [src]="product.gallery.second.mobile" alt="Gallery image 2">
+    </picture>
+
+    <picture class="product_gallery-item">
+      <source [srcset]="product.gallery.third.desktop" media="(min-width: 1200px)">
+      <source [srcset]="product.gallery.third.tablet" media="(min-width: 768px)">
+      <img [src]="product.gallery.third.mobile" alt="Gallery image 3">
+    </picture>
+  </div>
+</div>

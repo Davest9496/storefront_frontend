@@ -1,5 +1,3 @@
-// Main routing configuration file
-
 import { Routes } from '@angular/router';
 import { ScrollGuard } from './guards/scroll.guard';
 
@@ -14,6 +12,12 @@ export const routes: Routes = [
     path: 'category',
     loadChildren: () =>
       import('./pages/category/category.routes').then((m) => m.CATEGORY_ROUTES),
+    canActivate: [ScrollGuard],
+  },
+  {
+    path: 'product',
+    loadChildren: () =>
+      import('./pages/product-details/product.routes').then((m) => m.PRODUCT_ROUTES),
     canActivate: [ScrollGuard],
   },
   {
