@@ -1,5 +1,3 @@
-// src/app/pages/product/product-details.component.ts
-
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -15,7 +13,7 @@ import { CategoryService } from '../../services/category.services';
 })
 export class ProductDetailsComponent implements OnInit {
   product?: Product;
-  quantity: number = 1;
+  quantity: number = 0;
 
   constructor(
     private route: ActivatedRoute,

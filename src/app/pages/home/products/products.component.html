@@ -12,7 +12,7 @@
         <div class="product_content">
             <h2>{{products[0].name}}</h2>
             <p>{{products[0].description}}</p>
-            <app-button variant="dark">SEE PRODUCT</app-button>
+            <app-button variant="dark" [routerLink]="['/product', products[0].id]">SEE PRODUCT</app-button>
         </div>
     </div>
 
@@ -25,7 +25,7 @@
         </picture>
         <div class="product_content">
             <h2>{{products[1].name}}</h2>
-            <app-button variant="outline">SEE PRODUCT</app-button>
+            <app-button variant="outline" [routerLink]="['/product', products[0].id]">SEE PRODUCT</app-button>
         </div>
     </div>
 
@@ -38,7 +38,7 @@
         </picture>
         <div class="product_content">
             <h2>{{products[2].name}}</h2>
-            <app-button variant="outline">SEE PRODUCT</app-button>
+            <app-button variant="outline" [routerLink]="['/product', products[0].id]">SEE PRODUCT</app-button>
         </div>
     </div>
 </section>

@@ -1,15 +1,17 @@
 import { Component } from '@angular/core';
+import { RouterModule } from '@angular/router';
 import { ButtonComponent } from '../../../components/button/button.component';
 
 @Component({
   selector: 'app-products',
-  imports: [ButtonComponent],
+  imports: [ButtonComponent, RouterModule],
   templateUrl: './products.component.html',
   styleUrls: ['./products.component.scss'],
 })
 export class ProductsComponent {
   products = [
     {
+      id: 'zx9',
       name: 'ZX9 SPEAKER',
       description:
         'Upgrade to premium speakers that are phenomenally built to deliver truly remarkable sound.',
@@ -22,6 +24,7 @@ export class ProductsComponent {
       class: 'product_featured',
     },
     {
+      id: 'zx7',
       name: 'ZX7 SPEAKER',
       image: {
         mobile: 'assets/home/mobile/image-speaker-zx7.jpg',
@@ -31,6 +34,7 @@ export class ProductsComponent {
       class: 'product_secondary',
     },
     {
+      id: 'yx1',
       name: 'YX1 EARPHONES',
       image: {
         mobile: 'assets/home/mobile/image-earphones-yx1.jpg',
