@@ -4,7 +4,7 @@ import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
 import { MenuComponent } from '@app/components/menu/menu.component';
 import { PopularProductsComponent } from '@app/components/popular-products/popular-products.component';
 import { Product } from '@app/interfaces/product.interface';
-import { CategoryService } from '../../services/category.services';
+import { CategoryService } from '../../services/category.service';
 import { filter, Subscription } from 'rxjs';
 
 @Component({

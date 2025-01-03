@@ -1,16 +1,23 @@
 import { Component, HostListener } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { CartService } from '@app/services/cart.service';
+import { CartComponent } from '../cart/cart.component';
 
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss'],
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, CartComponent],
 })
 export class HeaderComponent {
   isMenuOpen = false;
+  constructor(private cartService: CartService) {}
+
+  toggleCart(): void {
+    this.cartService.toggleCart();
+  }
 
   // Helper method to close menu
   closeMenu(): void {

@@ -4,7 +4,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
-import { CategoryService } from '../../services/category.services';
+import { CategoryService } from '../../services/category.service';
 import { CategoryItemComponent } from './category-item/category-item.component';
 import { Category, CategoryItem } from '../../interfaces/category.interface';
 

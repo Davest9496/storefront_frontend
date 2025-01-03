@@ -63,6 +63,7 @@
         <button 
             class="header_cart"
             aria-label="View shopping cart"
+            (click)="toggleCart()"
         >
             <img 
                 src="assets/shared/desktop/icon-cart.svg" 
@@ -72,4 +73,5 @@
         </button>
     </nav>
     <hr class="header_hr">
+    <app-cart/>
 </header>

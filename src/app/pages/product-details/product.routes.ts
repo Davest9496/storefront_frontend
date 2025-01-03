@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
 import { ProductDetailsComponent } from './product-details.component';
-import { CategoryService } from '@app/services/category.services';
+import { CategoryService } from '@app/services/category.service';
 
 export const PRODUCT_ROUTES: Routes = [
   {

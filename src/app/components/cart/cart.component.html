@@ -1,0 +1,67 @@
+<!-- cart.component.html -->
+<div 
+  class="cart-overlay"
+  *ngIf="(cartState$ | async)?.isVisible"
+  (click)="closeCart()"
+></div>
+
+<div 
+  class="cart" 
+  *ngIf="(cartState$ | async) as cartState"
+  [class.visible]="cartState.isVisible"
+>
+  <div class="cart_header">
+    <h2 class="cart_title">CART ({{cartService.getItemCount()}})</h2>
+    <button 
+      class="cart_remove-all"
+      (click)="removeAll()"
+      [class.disabled]="!cartState.items.length"
+    >
+      Remove all
+    </button>
+  </div>
+
+  <div class="cart_items" *ngIf="cartState.items.length > 0">
+    <div 
+      class="cart_item" 
+      *ngFor="let item of cartState.items; trackBy: trackByFn"
+    >
+      <div class="cart_item-image">
+        <picture>
+          <!-- We're using mobile images since cart items are small -->
+          <img [src]="item.image" [alt]="item.name">
+        </picture>
+      </div>
+      <div class="cart_item-details">
+        <h3 class="cart_item-name">{{item.name}}</h3>
+        <p class="cart_item-price">${{item.price | number:'1.0-0'}}</p>
+      </div>
+      <div class="cart_item-quantity">
+        <button 
+          class="cart_quantity-btn"
+          (click)="updateQuantity(item.id, item.quantity - 1)"
+          [disabled]="item.quantity <= 1"
+          aria-label="Decrease quantity"
+        >-</button>
+        <span class="cart_quantity-value">{{item.quantity}}</span>
+        <button 
+          class="cart_quantity-btn"
+          (click)="updateQuantity(item.id, item.quantity + 1)"
+          aria-label="Increase quantity"
+        >+</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="cart_empty" *ngIf="!cartState.items.length">
+    <p>Your cart is empty</p>
+  </div>
+
+  <div class="cart_footer" *ngIf="cartState.items.length > 0">
+    <div class="cart_total">
+      <span>TOTAL</span>
+      <span class="cart_total-amount">${{cartService.getTotal() | number:'1.0-0'}}</span>
+    </div>
+    <button class="cart_checkout">CHECKOUT</button>
+  </div>
+</div>
