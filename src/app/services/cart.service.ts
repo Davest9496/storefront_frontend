@@ -39,11 +39,11 @@ export class CartService {
     );
 
     if (existingItem) {
-     const updatedItems = currentState.items.map((item) =>
-       item.id === productId
-         ? { ...item, quantity: item.quantity + quantity }
-         : item
-     );
+      const updatedItems = currentState.items.map((item) =>
+        item.id === productId
+          ? { ...item, quantity: item.quantity + quantity }
+          : item
+      );
       this.cartState.next({
         ...currentState,
         items: updatedItems,
@@ -64,15 +64,18 @@ export class CartService {
     }
   }
 
-  updateQuantity(productId: string, quantity: number): void {
+  updateQuantity(productId: string, newQuantity: number): void {
     const currentState = this.cartState.getValue();
-    if (quantity <= 0) {
+
+    if (newQuantity <= 0) {
       this.removeItem(productId);
       return;
     }
 
     const updatedItems = currentState.items.map((item) =>
-      item.id === productId ? { ...item, quantity } : item
+      item.id === productId
+        ? { ...item, quantity: Math.max(1, newQuantity) }
+        : item
     );
 
     this.cartState.next({
