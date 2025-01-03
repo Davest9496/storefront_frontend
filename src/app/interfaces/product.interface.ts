@@ -8,7 +8,6 @@ export interface Product {
   isNew: boolean;
   features: string[];
   includes: BoxItem[];
-  // gallery: Gallery;
   images: {
     mobile: string;
     tablet: string;

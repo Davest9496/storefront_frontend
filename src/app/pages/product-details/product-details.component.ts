@@ -2,13 +2,14 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MenuComponent } from '@app/components/menu/menu.component';
+import { PopularProductsComponent } from '@app/components/popular-products/popular-products.component';
 import { Product } from '@app/interfaces/product.interface';
 import { CategoryService } from '../../services/category.services';
 
 @Component({
   selector: 'app-product-details',
   standalone: true,
-  imports: [CommonModule, MenuComponent],
+  imports: [CommonModule, MenuComponent, PopularProductsComponent],
   templateUrl: './product-details.component.html',
   styleUrls: ['./product-details.component.scss'],
 })
