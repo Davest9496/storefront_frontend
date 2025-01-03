@@ -17,6 +17,8 @@ export const appConfig: ApplicationConfig = {
 
     provideClientHydration(withEventReplay()),
 
+    provideClientHydration(),
+
     ScrollService,
   ],
 };

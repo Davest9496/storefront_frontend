@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, NavigationExtras } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { ButtonComponent } from '../button/button.component';
 
@@ -46,15 +46,32 @@ export class PopularProductsComponent {
     return product.id;
   }
 
-  navigateToProduct(productId: string): void {
-    // Using async/await to handle navigation and potential errors
-    this.router
-      .navigate(['/product', productId])
-      .then(() => {
-        console.log('Navigation successful:', productId);
-      })
-      .catch((err) => {
-        console.error('Navigation failed:', err);
+  async navigateToProduct(productId: string): Promise<void> {
+
+    // Define navigation extras to force route reuse strategy
+    const navigationExtras: NavigationExtras = {
+      onSameUrlNavigation: 'reload',
+      state: { forceReload: true },
+    };
+
+    try {
+      // First navigate away to force component destruction
+      await this.router.navigateByUrl('/', { skipLocationChange: true });
+
+      // Then navigate to the product page
+      const result = await this.router.navigate(
+        ['/product', productId],
+        navigationExtras
+      );
+
+      //-- Debugger for Navogation to product-details --//
+      console.log('Navigation completed:', {
+        success: result,
+        productId: productId,
+        currentUrl: this.router.url,
       });
+    } catch (error) {
+      console.error('Navigation failed:', error);
+    }
   }
 }

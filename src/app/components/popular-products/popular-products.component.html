@@ -19,7 +19,9 @@
       </picture>
       <h3 class="popular-products_name">{{ product.name }}</h3>
       <!-- Fix the router link syntax -->
-      <app-button variant="primary" (click)="navigateToProduct(product.id)">
+    <app-button 
+        variant="primary" 
+        (click)="navigateToProduct(product.id); $event.preventDefault()">
         SEE PRODUCT
       </app-button>
     </div>

@@ -1,10 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
 import { MenuComponent } from '@app/components/menu/menu.component';
 import { PopularProductsComponent } from '@app/components/popular-products/popular-products.component';
 import { Product } from '@app/interfaces/product.interface';
 import { CategoryService } from '../../services/category.services';
+import { filter, Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-product-details',
@@ -16,20 +17,35 @@ import { CategoryService } from '../../services/category.services';
 export class ProductDetailsComponent implements OnInit {
   product?: Product;
   quantity: number = 1;
+  private routeSubscription?: Subscription;
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private categoryService: CategoryService
-  ) {}
+  ) {
+    // Subscribe to route changes while on the same component
+    this.routeSubscription = this.router.events
+      .pipe(filter((event) => event instanceof NavigationEnd))
+      .subscribe(() => {
+        const productId = this.route.snapshot.params['id'];
+        this.findProduct(productId);
+      });
+  }
 
   ngOnInit(): void {
     const productId = this.route.snapshot.params['id'];
     this.findProduct(productId);
   }
 
-  private findProduct(productId: string): void {
+  ngOnDestroy(): void {
+    // Clean up subscription to prevent memory leaks
+    if (this.routeSubscription) {
+      this.routeSubscription.unsubscribe();
+    }
+  }
 
+  private findProduct(productId: string): void {
     const categories = this.categoryService.getCategories();
     for (const category of categories) {
       const product = category.items.find((item) => item.id === productId);
@@ -38,7 +54,7 @@ export class ProductDetailsComponent implements OnInit {
         this.product = {
           ...product,
           category: category.name.toLocaleLowerCase(),
-          price: product.price || 0
+          price: product.price || 0,
         } as Product;
 
         return;
