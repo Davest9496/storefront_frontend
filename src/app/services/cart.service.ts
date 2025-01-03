@@ -30,6 +30,7 @@ export class CartService {
     categoryName: string,
     name: string,
     price: number,
+    quantity: number = 1,
     image: string
   ): void {
     const currentState = this.cartState.getValue();
@@ -38,9 +39,11 @@ export class CartService {
     );
 
     if (existingItem) {
-      const updatedItems = currentState.items.map((item) =>
-        item.id === productId ? { ...item, quantity: item.quantity + 1 } : item
-      );
+     const updatedItems = currentState.items.map((item) =>
+       item.id === productId
+         ? { ...item, quantity: item.quantity + quantity }
+         : item
+     );
       this.cartState.next({
         ...currentState,
         items: updatedItems,
@@ -50,7 +53,7 @@ export class CartService {
         id: productId,
         name,
         price,
-        quantity: 1,
+        quantity,
         image,
         category: categoryName,
       };

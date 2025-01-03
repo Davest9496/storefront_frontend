@@ -94,6 +94,7 @@ export class ProductDetailsComponent implements OnInit {
         this.product.category,
         this.product.name,
         this.product.price,
+        this.quantity,
         this.product.images.mobile
       );
       this.quantity = 1;
