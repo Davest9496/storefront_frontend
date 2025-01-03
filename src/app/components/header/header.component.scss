@@ -128,10 +128,17 @@
         cursor: pointer;
         display: flex;
         align-items: center;
+        position: relative;
         
         &:hover {
             opacity: 0.8;
         }
+    }
+
+    &_cart-wrapper {
+        position: relative;
+        display: flex;
+        align-items: center;
     }
 
     &_cart-icon {
@@ -139,13 +146,27 @@
         height: 1.25rem;
     }
 
+    &_cart-badge {
+        position: absolute;
+        bottom: -8px;
+        right: -12px;
+        background-color: red;
+        color: f.color('white');
+        font-size: 0.75rem;
+        font-weight: f.get-font-weight('bold');
+        min-width: 18px;
+        height: 18px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
     &_hr {
         height: 1px;
         border: none;
         background-color: f.color-with-opacity('white', .1);
         margin: 0;
-        // bottom: 0;
-        // position: absolute;
     }
 }
 

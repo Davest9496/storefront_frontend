@@ -65,11 +65,20 @@
             aria-label="View shopping cart"
             (click)="toggleCart()"
         >
-            <img 
-                src="assets/shared/desktop/icon-cart.svg" 
-                alt="Shopping cart" 
-                class="header_cart-icon"
-            >
+            <div class="header_cart-wrapper">
+                <img 
+                    src="assets/shared/desktop/icon-cart.svg" 
+                    alt="Shopping cart" 
+                    class="header_cart-icon"
+                >
+                @if (cartService.getCartState() | async; as state) {
+                    @if (hasItems(state)) {
+                        <span class="header_cart-badge">
+                            {{getItemCount(state)}}
+                        </span>
+                    }
+                }
+            </div>
         </button>
     </nav>
     <hr class="header_hr">

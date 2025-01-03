@@ -3,6 +3,7 @@ import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { CartService } from '@app/services/cart.service';
 import { CartComponent } from '../cart/cart.component';
+import { CartState, CartItem } from '@app/interfaces/cart.interface';
 
 @Component({
   selector: 'app-header',
@@ -13,10 +14,20 @@ import { CartComponent } from '../cart/cart.component';
 })
 export class HeaderComponent {
   isMenuOpen = false;
-  constructor(private cartService: CartService) {}
+  constructor(public cartService: CartService) {}
 
   toggleCart(): void {
     this.cartService.toggleCart();
+  }
+
+  getItemCount(state: CartState): number {
+    if (!state || !state.items) return 0;
+    return state.items.reduce((sum, item) => sum + item.quantity, 0);
+  }
+
+  // Helper method to check if cart has items
+  hasItems(state: CartState): boolean {
+    return state?.items?.length > 0;
   }
 
   // Helper method to close menu

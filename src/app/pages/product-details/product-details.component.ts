@@ -6,6 +6,7 @@ import { PopularProductsComponent } from '@app/components/popular-products/popul
 import { Product } from '@app/interfaces/product.interface';
 import { CategoryService } from '../../services/category.service';
 import { filter, Subscription } from 'rxjs';
+import { CartService } from '@app/services/cart.service';
 
 @Component({
   selector: 'app-product-details',
@@ -22,7 +23,8 @@ export class ProductDetailsComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private categoryService: CategoryService
+    private categoryService: CategoryService,
+    private cartService: CartService
   ) {
     // Subscribe to route changes while on the same component
     this.routeSubscription = this.router.events
@@ -82,6 +84,21 @@ export class ProductDetailsComponent implements OnInit {
   decrementQuantity(): void {
     if (this.quantity > 1) {
       this.quantity--;
+    }
+  }
+
+  addToCart(): void {
+    if (this.product && this.quantity > 0) {
+      this.cartService.addToCart(
+        this.product.id,
+        this.product.category,
+        this.product.name,
+        this.product.price,
+        this.product.images.mobile
+      );
+      this.quantity = 1;
+      //-- Optionally show the cart after adding --//
+      // this.cartService.toggleCart();
     }
   }
 
