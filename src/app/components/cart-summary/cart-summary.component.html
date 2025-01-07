@@ -11,7 +11,7 @@
         </picture>
         <div class="summary_item-details">
           <h3 class="summary_item-name">{{ item.name }}</h3>
-          <p class="summary_item-price">$ {{ item.price | number }}</p>
+          <p class="summary_item-price">£ {{ item.price | number }}</p>
         </div>
         <span class="summary_item-quantity">x{{ item.quantity }}</span>
       </li>
@@ -22,17 +22,17 @@
   <div class="summary_costs">
     <div class="summary_cost-row">
       <span class="summary_cost-label">TOTAL</span>
-      <span class="summary_cost-value">$ {{ subtotal | number }}</span>
+      <span class="summary_cost-value">£ {{ subtotal | number }}</span>
     </div>
     
     <div class="summary_cost-row">
       <span class="summary_cost-label">SHIPPING</span>
-      <span class="summary_cost-value">$ {{ shippingCost | number }}</span>
+      <span class="summary_cost-value">£ {{ shippingCost | number }}</span>
     </div>
     
     <div class="summary_cost-row">
       <span class="summary_cost-label">VAT (INCLUDED)</span>
-      <span class="summary_cost-value">$ {{ vat | number }}</span>
+      <span class="summary_cost-value">£ {{ vat | number }}</span>
     </div>
     
     <div class="summary_cost-row summary_cost-row--total">

@@ -21,7 +21,7 @@ export class SummaryComponent {
   @Input() items: CartItem[] = [];
 
   // Shipping cost is fixed
-  readonly shippingCost = 50;
+  readonly shippingCost = 0;
   // VAT rate is 20%
   readonly vatRate = 0.2;
 
