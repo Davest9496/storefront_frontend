@@ -2,11 +2,9 @@
 @use '../../../styles/abstracts/functions' as f;
 @use '../../../styles/abstracts/mixins' as m;
 
-// Main container styles
 .checkout {
   margin: 0 auto;
 
-  // Page title
   &_title {
     font-size: f.get-font-size('h4');
     font-weight: f.get-font-weight('bold');
@@ -20,28 +18,23 @@
 
   // Form container
   &_form {
-    background-color: f.color('white');
     padding: 1.5rem;
     border-radius: 0.5rem;
-    
-    @include m.medium {
-      padding: 2rem;
-    }
-    
-    @include m.desktop {
-      padding: 3rem;
+    overflow: hidden;
+
+    input {
+      box-sizing: border-box;
     }
   }
 
-  // Section styles
   &_section {
-    margin-bottom: 2rem;
+    margin-bottom: 3rem;
 
     &-title {
       color: f.color('primary');
       font-size: f.get-font-size('small');
       font-weight: f.get-font-weight('bold');
-      margin-bottom: 1.5rem;
+      margin-bottom: 2rem;
       text-transform: uppercase;
       letter-spacing: 1px;
       
@@ -51,37 +44,36 @@
     }
   }
 
-  // Grid layout for form fields
+  // Updated grid layout for form fields
   &_grid {
     display: grid;
-    gap: 1.5rem;
+    grid-template-columns: 1fr;
     
     @include m.medium {
       grid-template-columns: repeat(2, 1fr);
-      gap: 1rem;
+      column-gap: 3rem;
+      row-gap: 2rem;
     }
   }
 
-  // Form field styles
+  // Form field styles with improved spacing
   &_field {
     &-full {
-      @include m.medium {
-        grid-column: 1 / -1;
-      }
+      grid-column: 1 / -1;
     }
 
     label {
       display: block;
       font-size: f.get-font-size('small');
       font-weight: f.get-font-weight('bold');
-      margin-bottom: 0.5rem;
+      margin-bottom: 1rem;
     }
 
     input {
       width: 100%;
       padding: 1rem;
       border: 1px solid f.color-with-opacity('black', 0.1);
-      border-radius: 0.5rem;
+      border-radius: 0.25rem;
       font-size: f.get-font-size('body');
       transition: border-color 0.2s ease;
       
@@ -100,11 +92,12 @@
     }
   }
 
-  // Radio button group styles
+  // Radio button group
   &_radio-group {
     display: flex;
     flex-direction: column;
     gap: 1rem;
+    margin-top: 0.5rem;
     
     @include m.medium {
       flex-direction: row;

@@ -4,12 +4,12 @@
 @use '../../styles/abstracts/mixins' as m;
 
 .summary {
-  background-color: f.color('white');
+  border: solid 1px f.color-with-opacity('black', 0.1);
+  border-radius: .25rem;
   padding: 1.5rem;
-  border-radius: 0.5rem;
   
   @include m.medium {
-    padding: 2rem;
+    padding: 1.5rem;
   }
   
   &_title {

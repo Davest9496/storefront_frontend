@@ -1,19 +1,33 @@
-@use '../../styles/abstracts/variables' as v;
-@use '../../styles/abstracts/functions' as f;
-@use '../../styles/abstracts/mixins' as m;
+@use "../../styles/abstracts/variables" as v;
+@use "../../styles/abstracts/functions" as f;
+@use "../../styles/abstracts/mixins" as m;
 
-.checkout_grid {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 20px;
+.checkout-page {
+    
+  &_grid {
+    display: flex;
+    flex-direction: column;
+    padding: 2rem;
+
+    @include m.medium {
+        padding: 2.5rem;
+    }
 
     @include m.desktop {
-        grid-template-columns: calc(70% - 20px) 30%;
-        padding: 3% 10%;
+      padding: 5% 10%;
+      flex-direction: row;
+      gap: 2rem;
     }
-}
+  }
 
-app-checkout,
-app-summary {
-    width: 100%;
+  &_form {
+    border: solid 1px f.color-with-opacity('black', 0.1);
+    border-radius: .25rem;
+    flex-basis: 70%;
+    margin-bottom: 2rem;
+  }
+
+  &_summary {
+    flex-basis: 30%;
+  }
 }
