@@ -1,0 +1,19 @@
+@use '../../styles/abstracts/variables' as v;
+@use '../../styles/abstracts/functions' as f;
+@use '../../styles/abstracts/mixins' as m;
+
+.checkout_grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 20px;
+
+    @include m.desktop {
+        grid-template-columns: calc(70% - 20px) 30%;
+        padding: 3% 10%;
+    }
+}
+
+app-checkout,
+app-summary {
+    width: 100%;
+}

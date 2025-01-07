@@ -1,0 +1,141 @@
+@use '../../../styles/abstracts/variables' as v;
+@use '../../../styles/abstracts/functions' as f;
+@use '../../../styles/abstracts/mixins' as m;
+
+// Main container styles
+.checkout {
+  margin: 0 auto;
+
+  // Page title
+  &_title {
+    font-size: f.get-font-size('h4');
+    font-weight: f.get-font-weight('bold');
+    margin-bottom: 2rem;
+    
+    @include m.medium {
+      font-size: f.get-font-size('h3');
+      margin-bottom: 3rem;
+    }
+  }
+
+  // Form container
+  &_form {
+    background-color: f.color('white');
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    
+    @include m.medium {
+      padding: 2rem;
+    }
+    
+    @include m.desktop {
+      padding: 3rem;
+    }
+  }
+
+  // Section styles
+  &_section {
+    margin-bottom: 2rem;
+
+    &-title {
+      color: f.color('primary');
+      font-size: f.get-font-size('small');
+      font-weight: f.get-font-weight('bold');
+      margin-bottom: 1.5rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      
+      @include m.medium {
+        font-size: f.get-font-size('body');
+      }
+    }
+  }
+
+  // Grid layout for form fields
+  &_grid {
+    display: grid;
+    gap: 1.5rem;
+    
+    @include m.medium {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1rem;
+    }
+  }
+
+  // Form field styles
+  &_field {
+    &-full {
+      @include m.medium {
+        grid-column: 1 / -1;
+      }
+    }
+
+    label {
+      display: block;
+      font-size: f.get-font-size('small');
+      font-weight: f.get-font-weight('bold');
+      margin-bottom: 0.5rem;
+    }
+
+    input {
+      width: 100%;
+      padding: 1rem;
+      border: 1px solid f.color-with-opacity('black', 0.1);
+      border-radius: 0.5rem;
+      font-size: f.get-font-size('body');
+      transition: border-color 0.2s ease;
+      
+      &:focus {
+        outline: none;
+        border-color: f.color('primary');
+      }
+      
+      &::placeholder {
+        color: f.color-with-opacity('black', 0.4);
+      }
+
+      &.ng-touched.ng-invalid {
+        border-color: #CD2C2C;
+      }
+    }
+  }
+
+  // Radio button group styles
+  &_radio-group {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    
+    @include m.medium {
+      flex-direction: row;
+      gap: 2rem;
+    }
+  }
+
+  // Individual radio button styles
+  &_radio {
+    display: flex;
+    align-items: center;
+    padding: 1rem;
+    border: 1px solid f.color-with-opacity('black', 0.1);
+    border-radius: 0.5rem;
+    cursor: pointer;
+    transition: border-color 0.2s ease;
+    flex: 1;
+    
+    input {
+      margin-right: 1rem;
+      width: auto;
+      cursor: pointer;
+    }
+    
+    &:hover {
+      border-color: f.color('primary');
+    }
+
+    &-text {
+      font-size: f.get-font-size('body');
+      font-weight: f.get-font-weight('medium');
+    }
+  }
+}

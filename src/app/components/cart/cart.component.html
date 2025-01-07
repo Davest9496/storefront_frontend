@@ -83,6 +83,12 @@
       <span>TOTAL</span>
       <span class="cart_total-amount">${{cartService.getTotal() | number}}</span>
     </div>
-    <button class="cart_checkout">CHECKOUT</button>
+   <button 
+  class="cart_checkout"
+  (click)="onCheckout()"
+  [disabled]="!cartState.items.length"
+>
+  CHECKOUT
+</button>
   </div>
 </div>

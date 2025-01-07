@@ -1,3 +1,4 @@
+// app.routes.ts
 import { Routes } from '@angular/router';
 import { ScrollGuard } from './guards/scroll.guard';
 
@@ -17,7 +18,17 @@ export const routes: Routes = [
   {
     path: 'product',
     loadChildren: () =>
-      import('./pages/product-details/product.routes').then((m) => m.PRODUCT_ROUTES),
+      import('./pages/product-details/product.routes').then(
+        (m) => m.PRODUCT_ROUTES
+      ),
+    canActivate: [ScrollGuard],
+  },
+  {
+    path: 'checkout',
+    loadChildren: () =>
+      import('./pages/check-out/check-out.routes').then(
+        (m) => m.CHECKOUT_ROUTES
+      ),
     canActivate: [ScrollGuard],
   },
   {

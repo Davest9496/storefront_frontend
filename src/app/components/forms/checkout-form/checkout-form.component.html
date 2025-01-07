@@ -1,0 +1,139 @@
+<div class="checkout">
+  
+  <form [formGroup]="checkoutForm" class="checkout_form">
+  <h1 class="checkout_title">CHECKOUT</h1>
+    <!-- Billing Details Section -->
+    <section class="checkout_section">
+      <h2 class="checkout_section-title">BILLING DETAILS</h2>
+      <div class="checkout_grid">
+        <div class="checkout_field">
+          <label for="name">Name</label>
+          <input 
+            id="name"
+            type="text" 
+            formControlName="name"
+            placeholder="Alexei Ward"
+          >
+        </div>
+        
+        <div class="checkout_field">
+          <label for="email">Email Address</label>
+          <input 
+            id="email"
+            type="email" 
+            formControlName="email"
+            placeholder="alexei@mail.com"
+          >
+        </div>
+        
+        <div class="checkout_field">
+          <label for="phone">Phone Number</label>
+          <input 
+            id="phone"
+            type="tel" 
+            formControlName="phone"
+            placeholder="+1 202-555-0136"
+          >
+        </div>
+      </div>
+    </section>
+
+    <!-- Shipping Info Section -->
+    <section class="checkout_section">
+      <h2 class="checkout_section-title">SHIPPING INFO</h2>
+      <div class="checkout_grid">
+        <div class="checkout_field checkout_field-full">
+          <label for="address">Address</label>
+          <input 
+            id="address"
+            type="text" 
+            formControlName="address"
+            placeholder="1137 Williams Avenue"
+          >
+        </div>
+        
+        <div class="checkout_field">
+          <label for="zipCode">ZIP Code</label>
+          <input 
+            id="zipCode"
+            type="text" 
+            formControlName="zipCode"
+            placeholder="10001"
+          >
+        </div>
+        
+        <div class="checkout_field">
+          <label for="city">City</label>
+          <input 
+            id="city"
+            type="text" 
+            formControlName="city"
+            placeholder="New York"
+          >
+        </div>
+        
+        <div class="checkout_field">
+          <label for="country">Country</label>
+          <input 
+            id="country"
+            type="text" 
+            formControlName="country"
+            placeholder="United States"
+          >
+        </div>
+      </div>
+    </section>
+
+    <!-- Payment Details Section -->
+    <section class="checkout_section">
+      <h2 class="checkout_section-title">PAYMENT DETAILS</h2>
+      <div class="checkout_grid">
+        <div class="checkout_field checkout_field-full">
+          <label>Payment Method</label>
+          <div class="checkout_radio-group">
+            <label class="checkout_radio">
+              <input 
+                type="radio" 
+                formControlName="paymentMethod"
+                value="e-Money"
+              >
+              <span class="checkout_radio-text">e-Money</span>
+            </label>
+            
+            <label class="checkout_radio">
+              <input 
+                type="radio" 
+                formControlName="paymentMethod"
+                value="cash"
+              >
+              <span class="checkout_radio-text">Cash on Delivery</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Conditional e-Money Fields -->
+        <ng-container *ngIf="showEMoneyFields">
+          <div class="checkout_field">
+            <label for="eMoneyNumber">e-Money Number</label>
+            <input 
+              id="eMoneyNumber"
+              type="text" 
+              formControlName="eMoneyNumber"
+              placeholder="238521993"
+            >
+          </div>
+          
+          <div class="checkout_field">
+            <label for="eMoneyPin">e-Money PIN</label>
+            <input 
+              id="eMoneyPin"
+              type="password" 
+              formControlName="eMoneyPin"
+              placeholder="6891"
+            >
+          </div>
+        </ng-container>
+      </div>
+    </section>
+  </form>
+</div>

@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { CartService } from '../../services/cart.service';
 import { CartItem, CartState } from '../../interfaces/cart.interface';
 import { Observable } from 'rxjs';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-cart',
@@ -15,7 +16,10 @@ import { Observable } from 'rxjs';
 export class CartComponent implements OnInit {
   cartState$: Observable<CartState>;
 
-  constructor(public cartService: CartService) {
+  constructor(
+    public cartService: CartService,
+    private router: Router
+  ) {
     this.cartState$ = this.cartService.getCartState();
   }
 
@@ -39,5 +43,13 @@ export class CartComponent implements OnInit {
 
   trackByFn(index: number, item: CartItem): string {
     return item.id;
+  }
+
+  // Method to handle checkout navigation
+  onCheckout(): void {
+    // First close the cart
+    this.cartService.toggleCart();
+    // Then navigate to checkout page
+    this.router.navigate(['/checkout']);
   }
 }
