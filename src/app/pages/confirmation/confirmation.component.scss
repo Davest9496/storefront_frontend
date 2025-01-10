@@ -1,0 +1,121 @@
+// confirmation.component.scss
+@use '../../styles/abstracts/variables' as v;
+@use '../../styles/abstracts/functions' as f;
+@use '../../styles/abstracts/mixins' as m;
+
+.confirmation {
+  min-height: 100vh;
+  padding: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(0, 0, 0, 0.4);
+  
+  &_modal {
+    background-color: f.color('white');
+    padding: 2rem;
+    border-radius: 0.5rem;
+    width: 100%;
+    max-width: 540px;
+    
+    @include m.medium {
+      padding: 3rem;
+    }
+  }
+  
+  &_icon {
+    margin-bottom: 2rem;
+  }
+  
+  &_title {
+    font-size: f.get-font-size('h4');
+    font-weight: f.get-font-weight('bold');
+    margin-bottom: 1.5rem;
+    
+    @include m.medium {
+      font-size: f.get-font-size('h3');
+    }
+  }
+  
+  &_message {
+    color: f.color-with-opacity('black', 0.5);
+    margin-bottom: 2rem;
+  }
+  
+  &_summary {
+    background-color: f.color('white');
+    border-radius: 0.5rem;
+    overflow: hidden;
+    margin-bottom: 2rem;
+  }
+  
+  &_items {
+    background-color: #f1f1f1;
+    padding: 1.5rem;
+  }
+  
+  &_item {
+    &-main {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 0.5rem;
+    }
+    
+    img {
+      width: 3rem;
+      height: 3rem;
+      border-radius: 0.5rem;
+    }
+    
+    &-details {
+      flex: 1;
+      h3 {
+        font-size: f.get-font-size('small');
+        font-weight: f.get-font-weight('bold');
+      }
+      p {
+        color: f.color-with-opacity('black', 0.5);
+      }
+    }
+  }
+  
+  &_others {
+    text-align: center;
+    padding-top: 0.75rem;
+    border-top: 1px solid f.color-with-opacity('black', 0.08);
+    font-size: f.get-font-size('small');
+    color: f.color-with-opacity('black', 0.5);
+  }
+  
+  &_total {
+    background-color: f.color('black');
+    color: f.color('white');
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    
+    span:first-child {
+      color: f.color-with-opacity('white', 0.5);
+      font-size: f.get-font-size('small');
+    }
+  }
+  
+  &_button {
+    width: 100%;
+    background-color: f.color('primary');
+    color: f.color('white');
+    border: none;
+    padding: 1rem;
+    font-size: f.get-font-size('small');
+    font-weight: f.get-font-weight('bold');
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    
+    &:hover {
+      background-color: f.color('secondary');
+    }
+  }
+}

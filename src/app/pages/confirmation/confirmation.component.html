@@ -1,0 +1,57 @@
+<!-- confirmation.component.html -->
+<div class="confirmation">
+  <div class="confirmation_modal">
+    <!-- Success Icon -->
+    <div class="confirmation_icon">
+      <svg width="64" height="64" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="32" cy="32" r="32" fill="#D87D4A"/>
+        <path d="M20.754 33.333l6.751 6.751 15.804-15.803" stroke="#FFF" stroke-width="4" fill="none"/>
+      </svg>
+    </div>
+
+    <!-- Confirmation Message -->
+    <h1 class="confirmation_title">
+      THANK YOU<br>
+      FOR YOUR ORDER
+    </h1>
+    
+    <p class="confirmation_message">
+      You will receive an email confirmation shortly.
+    </p>
+
+    <!-- Order Summary -->
+    <div class="confirmation_summary">
+      <!-- Items List -->
+      <div class="confirmation_items">
+        @if (items.length > 0) {
+          <div class="confirmation_item">
+            <div class="confirmation_item-main">
+              <img [src]="items[0].image" [alt]="items[0].name">
+              <div class="confirmation_item-details">
+                <h3>{{ items[0].name }}</h3>
+                <p>$ {{ items[0].price | number }}</p>
+              </div>
+              <span class="confirmation_item-quantity">x{{ items[0].quantity }}</span>
+            </div>
+            @if (items.length > 1) {
+              <p class="confirmation_others">
+                and {{ items.length - 1 }} other item(s)
+              </p>
+            }
+          </div>
+        }
+      </div>
+
+      <!-- Grand Total -->
+      <div class="confirmation_total">
+        <span>GRAND TOTAL</span>
+        <span>$ {{ grandTotal | number }}</span>
+      </div>
+    </div>
+
+    <!-- Back to Home Button -->
+    <button class="confirmation_button" (click)="backToHome()">
+      BACK TO HOME
+    </button>
+  </div>
+</div>
