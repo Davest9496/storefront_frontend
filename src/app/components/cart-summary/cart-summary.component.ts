@@ -20,10 +20,15 @@ interface CartItem {
 export class SummaryComponent {
   @Input() items: CartItem[] = [];
 
-  // Shipping cost is fixed
-  readonly shippingCost = 0;
+  // Shipping cost is 5% of subtotal for development purpose
+  readonly shippingRate = 0.05;
   // VAT rate is 20%
   readonly vatRate = 0.2;
+
+  // Calculate shipping cost
+  get shippingCost(): number {
+    return this.subtotal * this.shippingRate
+  }
 
   // Calculate total before VAT and shipping
   get subtotal(): number {

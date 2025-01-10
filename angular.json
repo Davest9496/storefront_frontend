@@ -17,7 +17,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:application",
           "options": {
-            "outputPath": "dist/storefront-frontend/browser",
+            "outputPath": "dist",
             "index": "src/index.html",
             "browser": "src/main.ts",
             "polyfills": ["zone.js"],
@@ -99,6 +99,6 @@
     }
   },
   "cli": {
-    "analytics": "8eae4901-2c19-4f9d-9c49-8d743f0c3247"
+    "analytics": "c77217a4-c5a3-47a7-a796-588d6ca10b40"
   }
 }

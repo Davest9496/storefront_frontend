@@ -1,15 +1,13 @@
 {
-  "name": "client",
+  "name": "storefront-frontend",
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build",
+    "build": "ng build --configuration production",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "serve:ssr:client": "node dist/client/server/server.mjs",
-    "vercel-build": "ng build --configuration production",
-    "optimize-images": "imagemin \"src/assets/**/*.{jpg,png}\" --out-dir=\"src/assets/optimized\""
+    "vercel-build": "ng build --configuration production"
   },
   "private": true,
   "dependencies": {

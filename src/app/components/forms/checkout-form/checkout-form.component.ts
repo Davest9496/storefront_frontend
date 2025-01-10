@@ -15,7 +15,6 @@ import {
   styleUrls: ['./checkout-form.component.scss'],
 })
 export class CheckoutFormComponent implements OnInit {
-  // Form group to manage the entire checkout form
   checkoutForm: FormGroup;
 
   constructor(private fb: FormBuilder) {
@@ -28,7 +27,7 @@ export class CheckoutFormComponent implements OnInit {
 
       // Shipping info section
       address: ['', Validators.required],
-      zipCode: ['', Validators.required],
+      postCode: ['', Validators.required],
       city: ['', Validators.required],
       country: ['', Validators.required],
 
@@ -67,7 +66,7 @@ export class CheckoutFormComponent implements OnInit {
   onSubmit(): void {
     if (this.checkoutForm.valid) {
       console.log(this.checkoutForm.value);
-      // Handle form submission logic here
+      // Handle logic here -- Checkout
     } else {
       // Mark all fields as touched to trigger validation display
       Object.keys(this.checkoutForm.controls).forEach((key) => {
