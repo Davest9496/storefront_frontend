@@ -37,4 +37,11 @@ export const routes: Routes = [
       import('./pages/not-found/not-found').then((m) => m.NotFoundComponent),
     canActivate: [ScrollGuard],
   },
+  {
+    path: 'checkout/confirmation',
+    loadComponent: () =>
+      import('./pages/confirmation/confirmation.component').then(
+        (m) => m.ConfirmationComponent
+      ),
+  },
 ];
