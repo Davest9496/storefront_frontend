@@ -1,14 +1,7 @@
 // summary.component.ts
-import { Component, Input } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
-interface CartItem {
-  id: string;
-  name: string;
-  price: number;
-  quantity: number;
-  image: string;
-}
+import { CartItem } from '../../interfaces/cart.interface';
 
 @Component({
   selector: 'app-summary',
@@ -19,18 +12,15 @@ interface CartItem {
 })
 export class SummaryComponent {
   @Input() items: CartItem[] = [];
+  @Output() checkout = new EventEmitter<void>();
 
-  // Shipping cost is 5% of subtotal for development purpose
   readonly shippingRate = 0.05;
-  // VAT rate is 20%
   readonly vatRate = 0.2;
 
-  // Calculate shipping cost
   get shippingCost(): number {
-    return this.subtotal * this.shippingRate
+    return this.subtotal * this.shippingRate;
   }
 
-  // Calculate total before VAT and shipping
   get subtotal(): number {
     return this.items.reduce(
       (sum, item) => sum + item.price * item.quantity,
@@ -38,13 +28,15 @@ export class SummaryComponent {
     );
   }
 
-  // Calculate VAT amount
   get vat(): number {
     return this.subtotal * this.vatRate;
   }
 
-  // Calculate grand total
   get grandTotal(): number {
     return this.subtotal + this.shippingCost + this.vat;
+  }
+
+  handleCheckout(): void {
+    this.checkout.emit();
   }
 }
