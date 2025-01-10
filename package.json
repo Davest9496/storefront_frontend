@@ -7,7 +7,9 @@
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "serve:ssr:client": "node dist/client/server/server.mjs"
+    "serve:ssr:client": "node dist/client/server/server.mjs",
+    "vercel-build": "ng build --configuration production",
+    "optimize-images": "imagemin \"src/assets/**/*.{jpg,png}\" --out-dir=\"src/assets/optimized\""
   },
   "private": true,
   "dependencies": {
