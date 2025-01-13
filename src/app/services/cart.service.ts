@@ -1,11 +1,14 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { CartItem, CartState } from '../interfaces/cart.interface';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root',
 })
 export class CartService {
+  constructor(private router: Router) {}
+
   private initialState: CartState = {
     items: [],
     isVisible: false,
@@ -111,5 +114,18 @@ export class CartService {
   getItemCount(): number {
     const currentState = this.cartState.getValue();
     return currentState.items.reduce((sum, item) => sum + item.quantity, 0);
+  }
+
+  proceedToCheckout(): void {
+    const currentState = this.cartState.getValue();
+
+    if (currentState.items.length > 0) {
+      this.toggleCart();
+      this.router.navigate(['/checkout']);
+    }
+  }
+
+  getCurrentItems(): CartItem[] {
+    return this.cartState.getValue().items;
   }
 }

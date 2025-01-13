@@ -1,6 +1,6 @@
-// summary.component.ts
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { CartService } from '../../services/cart.service';
 import { CartItem } from '../../interfaces/cart.interface';
 
 @Component({
@@ -11,14 +11,14 @@ import { CartItem } from '../../interfaces/cart.interface';
   styleUrls: ['./cart-summary.component.scss'],
 })
 export class SummaryComponent {
-  @Input() items: CartItem[] = [];
-  @Output() checkout = new EventEmitter<void>();
-
   readonly shippingRate = 0.05;
   readonly vatRate = 0.2;
 
-  get shippingCost(): number {
-    return this.subtotal * this.shippingRate;
+  constructor(private cartService: CartService) {}
+
+  // Get items directly from cart service
+  get items(): CartItem[] {
+    return this.cartService.getCurrentItems();
   }
 
   get subtotal(): number {
@@ -26,6 +26,10 @@ export class SummaryComponent {
       (sum, item) => sum + item.price * item.quantity,
       0
     );
+  }
+
+  get shippingCost(): number {
+    return this.subtotal * this.shippingRate;
   }
 
   get vat(): number {
@@ -37,6 +41,13 @@ export class SummaryComponent {
   }
 
   handleCheckout(): void {
-    this.checkout.emit();
+    // This will be triggered when the checkout form is submitted
+    console.log('Processing checkout:', {
+      items: this.items,
+      subtotal: this.subtotal,
+      shipping: this.shippingCost,
+      vat: this.vat,
+      total: this.grandTotal,
+    });
   }
 }

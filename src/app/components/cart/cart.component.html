@@ -1,4 +1,3 @@
-<!-- cart.component.html -->
 <div 
   class="cart-overlay"
   *ngIf="(cartState$ | async)?.isVisible"
@@ -81,7 +80,7 @@
   <div class="cart_footer" *ngIf="cartState.items.length > 0">
     <div class="cart_total">
       <span>TOTAL</span>
-      <span class="cart_total-amount">${{cartService.getTotal() | number}}</span>
+      <span class="cart_total-amount">£{{cartService.getTotal() | number}}</span>
     </div>
    <button 
   class="cart_checkout"
