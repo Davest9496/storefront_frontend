@@ -131,4 +131,28 @@
       font-weight: f.get-font-weight('medium');
     }
   }
+
+   &_submit {
+    width: 100%;
+    background-color: f.color('primary');
+    color: f.color('white');
+    border: none;
+    border-radius: 0.5rem;
+    padding: 1rem;
+    font-size: f.get-font-size('small');
+    font-weight: f.get-font-weight('bold');
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    margin-top: 2rem;
+    
+    &:hover:not(:disabled) {
+      background-color: f.color('secondary');
+    }
+    
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  }
 }

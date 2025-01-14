@@ -1,7 +1,7 @@
 <div class="checkout">
-  
   <form [formGroup]="checkoutForm" class="checkout_form">
-  <h1 class="checkout_title">CHECKOUT</h1>
+    <h1 class="checkout_title">CHECKOUT</h1>
+    
     <!-- Billing Details Section -->
     <section class="checkout_section">
       <h2 class="checkout_section-title">BILLING DETAILS</h2>
@@ -12,6 +12,7 @@
             id="name"
             type="text" 
             formControlName="name"
+            [class.error]="checkoutForm.get('name')?.invalid && checkoutForm.get('name')?.touched"
             placeholder="Hugo Dee"
           >
         </div>
@@ -22,7 +23,8 @@
             id="email"
             type="email" 
             formControlName="email"
-            placeholder="hugo@mail.com"
+            [class.error]="checkoutForm.get('email')?.invalid && checkoutForm.get('email')?.touched"
+            placeholder="hugo@mail.co.uk"
           >
         </div>
         
@@ -32,7 +34,8 @@
             id="phone"
             type="tel" 
             formControlName="phone"
-            placeholder="+44 202-555-0136"
+            [class.error]="checkoutForm.get('phone')?.invalid && checkoutForm.get('phone')?.touched"
+            placeholder="07123 456789"
           >
         </div>
       </div>
@@ -43,22 +46,34 @@
       <h2 class="checkout_section-title">SHIPPING INFO</h2>
       <div class="checkout_grid">
         <div class="checkout_field checkout_field-full">
-          <label for="address">Address</label>
+          <label for="addressLine1">Address Line 1</label>
           <input 
-            id="address"
+            id="addressLine1"
             type="text" 
-            formControlName="address"
+            formControlName="addressLine1"
+            [class.error]="checkoutForm.get('addressLine1')?.invalid && checkoutForm.get('addressLine1')?.touched"
             placeholder="137 Old Kent Road"
+          >
+        </div>
+
+        <div class="checkout_field checkout_field-full">
+          <label for="addressLine2">Address Line 2 (Optional)</label>
+          <input 
+            id="addressLine2"
+            type="text" 
+            formControlName="addressLine2"
+            placeholder="Flat 4B"
           >
         </div>
         
         <div class="checkout_field">
-          <label for="zipCode">Post Code</label>
+          <label for="postcode">Post Code</label>
           <input 
-            id="zipCode"
+            id="postcode"
             type="text" 
-            formControlName="zipCode"
-            placeholder="NX2 4GY"
+            formControlName="postcode"
+            [class.error]="checkoutForm.get('postcode')?.invalid && checkoutForm.get('postcode')?.touched"
+            placeholder="SE1 5DP"
           >
         </div>
         
@@ -68,17 +83,18 @@
             id="city"
             type="text" 
             formControlName="city"
+            [class.error]="checkoutForm.get('city')?.invalid && checkoutForm.get('city')?.touched"
             placeholder="London"
           >
         </div>
         
         <div class="checkout_field">
-          <label for="country">Country</label>
+          <label for="county">County (Optional)</label>
           <input 
-            id="country"
+            id="county"
             type="text" 
-            formControlName="country"
-            placeholder="United Kingdom"
+            formControlName="county"
+            placeholder="Greater London"
           >
         </div>
       </div>
@@ -119,6 +135,7 @@
               id="eMoneyNumber"
               type="text" 
               formControlName="eMoneyNumber"
+              [class.error]="checkoutForm.get('eMoneyNumber')?.invalid && checkoutForm.get('eMoneyNumber')?.touched"
               placeholder="238521993"
             >
           </div>
@@ -129,11 +146,22 @@
               id="eMoneyPin"
               type="password" 
               formControlName="eMoneyPin"
+              [class.error]="checkoutForm.get('eMoneyPin')?.invalid && checkoutForm.get('eMoneyPin')?.touched"
               placeholder="6891"
             >
           </div>
         </ng-container>
       </div>
     </section>
+
+    <!-- Submit Button -->
+    <button 
+      type="submit" 
+      class="checkout_submit"
+      [disabled]="checkoutForm.invalid"
+      (click)="onSubmit()"
+    >
+      CONTINUE & PAY
+    </button>
   </form>
 </div>

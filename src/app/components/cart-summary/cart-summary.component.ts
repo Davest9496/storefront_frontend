@@ -33,7 +33,7 @@ export class SummaryComponent {
   }
 
   get vat(): number {
-    return this.subtotal * this.vatRate;
+    return parseFloat((this.subtotal * this.vatRate).toFixed(2));
   }
 
   get grandTotal(): number {
