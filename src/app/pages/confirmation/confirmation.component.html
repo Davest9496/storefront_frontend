@@ -32,7 +32,7 @@
               <img [src]="firstItem.image" [alt]="firstItem.name" class="confirmation_item-image">
               <div class="confirmation_item-details">
                 <h3>{{ firstItem.name }}</h3>
-                <p>$ {{ firstItem.price | number }}</p>
+                <p>£ {{ firstItem.price | number }}</p>
               </div>
             </div>
             <span class="confirmation_item-quantity">x{{ firstItem.quantity }}</span>
@@ -48,7 +48,7 @@
       <!-- Grand Total -->
       <div class="confirmation_total">
         <span>GRAND TOTAL</span>
-        <span>$ {{ grandTotal | number }}</span>
+        <span>£ {{ grandTotal | number }}</span>
       </div>
     </div>
 
