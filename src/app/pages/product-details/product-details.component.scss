@@ -59,6 +59,8 @@
   }
 
   &_info {
+    display: flex;
+  flex-direction: column;
     @include m.medium {
       flex: 1;
     }
@@ -198,10 +200,10 @@
     color: f.color-with-opacity("black", 0.5);
   }
 
-  // Cart Section
+  // Add To Cart and Quanity Counter Section
   &_cart {
     display: flex;
-    gap: 1rem;
+    gap: 1.5rem;
   }
 
   &_quantity {

@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormGroup } from '@angular/forms';
 import { CartService } from '../../services/cart.service';
+import { OrderService } from '@app/services/order.service';
 import { CartItem } from '../../interfaces/cart.interface';
 
 @Component({
@@ -15,7 +16,11 @@ import { CartItem } from '../../interfaces/cart.interface';
 export class SummaryComponent {
   @Input() checkoutForm!: FormGroup;
   @Input() formStatusChange!: boolean;
-  constructor(private cartService: CartService, private router: Router) {}
+  constructor(
+    private cartService: CartService,
+    private router: Router,
+    private orderService: OrderService
+  ) {}
 
   readonly shippingRate = 0.05;
   readonly vatRate = 0.2;
@@ -45,10 +50,7 @@ export class SummaryComponent {
   }
 
   async handleCheckout(): Promise<void> {
-
     try {
-      
-
       const orderData = {
         items: this.items,
         subtotal: this.subtotal,
@@ -60,6 +62,9 @@ export class SummaryComponent {
 
       console.log('Processing order:', orderData);
 
+      // Set the grandTotal in the shared service
+      this.orderService.setGrandTotal(this.grandTotal);
+
       // Simulate API call delay
       await new Promise((resolve) => setTimeout(resolve, 1000));
 
@@ -67,7 +72,6 @@ export class SummaryComponent {
     } catch (error) {
       console.error('Error processing checkout:', error);
     } finally {
-      
     }
   }
 }
