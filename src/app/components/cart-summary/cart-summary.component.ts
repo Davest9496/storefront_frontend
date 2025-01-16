@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormGroup } from '@angular/forms';
 import { CartService } from '../../services/cart.service';
 import { CartItem } from '../../interfaces/cart.interface';
 
@@ -11,10 +12,13 @@ import { CartItem } from '../../interfaces/cart.interface';
   styleUrls: ['./cart-summary.component.scss'],
 })
 export class SummaryComponent {
-  readonly shippingRate = 0.05;
-  readonly vatRate = 0.2;
+  @Input() checkoutForm!: FormGroup;
+  @Input() formStatusChange!: boolean;
 
   constructor(private cartService: CartService) {}
+
+  readonly shippingRate = 0.05;
+  readonly vatRate = 0.2;
 
   // Get items directly from cart service
   get items(): CartItem[] {
@@ -41,6 +45,7 @@ export class SummaryComponent {
   }
 
   handleCheckout(): void {
+    // Handle routing here
     // This will be triggered when the checkout form is submitted
     console.log('Processing checkout:', {
       items: this.items,

@@ -98,18 +98,6 @@ export class CheckoutFormComponent implements OnInit {
     }
   }
 
-  onSubmit(): void {
-    if (this.checkoutForm.valid) {
-      this.formValuesChange.emit(this.checkoutForm.value);
-    } else {
-      // Mark all fields as touched to trigger validation display
-      Object.keys(this.checkoutForm.controls).forEach((key) => {
-        const control = this.checkoutForm.get(key);
-        control?.markAsTouched();
-      });
-    }
-  }
-
   private handlePaymentMethodChange(method: string): void {
     const eMoneyNumber = this.checkoutForm.get('eMoneyNumber');
     const eMoneyPin = this.checkoutForm.get('eMoneyPin');

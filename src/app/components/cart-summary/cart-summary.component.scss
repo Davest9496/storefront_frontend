@@ -117,6 +117,11 @@
     &:hover {
       background-color: f.color('secondary');
     }
+
+    &:disabled {
+      background-color: f.color-with-opacity('primary', 0.5);
+      cursor: not-allowed;
+    }
   }
   
   // Tablet Styles

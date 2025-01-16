@@ -44,6 +44,7 @@
   
   <button 
     class="summary_button" 
+    [disabled]="!formStatusChange"
     (click)="handleCheckout()"
   >
     CONTINUE & PAY
