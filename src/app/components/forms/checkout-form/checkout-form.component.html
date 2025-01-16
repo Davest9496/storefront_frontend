@@ -15,6 +15,10 @@
             [class.error]="checkoutForm.get('name')?.invalid && checkoutForm.get('name')?.touched"
             placeholder="Hugo Dee"
           >
+          <div *ngIf="checkoutForm.get('name')?.invalid && checkoutForm.get('name')?.touched" class="error-message">
+            <span *ngIf="checkoutForm.get('name')?.errors?.['required']">Name is required.</span>
+            <span *ngIf="checkoutForm.get('name')?.errors?.['minlength']">Name must be at least 2 characters long.</span>
+          </div>
         </div>
         
         <div class="checkout_field">
@@ -26,6 +30,10 @@
             [class.error]="checkoutForm.get('email')?.invalid && checkoutForm.get('email')?.touched"
             placeholder="hugo@mail.co.uk"
           >
+          <div *ngIf="checkoutForm.get('email')?.invalid && checkoutForm.get('email')?.touched" class="error-message">
+            <span *ngIf="checkoutForm.get('email')?.errors?.['required']">Email is required.</span>
+            <span *ngIf="checkoutForm.get('email')?.errors?.['email']">Enter a valid email address.</span>
+          </div>
         </div>
         
         <div class="checkout_field">
@@ -37,6 +45,10 @@
             [class.error]="checkoutForm.get('phone')?.invalid && checkoutForm.get('phone')?.touched"
             placeholder="07123 456789"
           >
+          <div *ngIf="checkoutForm.get('phone')?.invalid && checkoutForm.get('phone')?.touched" class="error-message">
+            <span *ngIf="checkoutForm.get('phone')?.errors?.['required']">Phone number is required.</span>
+            <span *ngIf="checkoutForm.get('phone')?.errors?.['pattern']">Enter a valid UK phone number.</span>
+          </div>
         </div>
       </div>
     </section>
@@ -54,6 +66,10 @@
             [class.error]="checkoutForm.get('addressLine1')?.invalid && checkoutForm.get('addressLine1')?.touched"
             placeholder="137 Old Kent Road"
           >
+          <div *ngIf="checkoutForm.get('addressLine1')?.invalid && checkoutForm.get('addressLine1')?.touched" class="error-message">
+            <span *ngIf="checkoutForm.get('addressLine1')?.errors?.['required']">Address Line 1 is required.</span>
+            <span *ngIf="checkoutForm.get('addressLine1')?.errors?.['minlength']">Address Line 1 must be at least 5 characters long.</span>
+          </div>
         </div>
 
         <div class="checkout_field checkout_field-full">
@@ -75,6 +91,10 @@
             [class.error]="checkoutForm.get('postcode')?.invalid && checkoutForm.get('postcode')?.touched"
             placeholder="SE1 5DP"
           >
+          <div *ngIf="checkoutForm.get('postcode')?.invalid && checkoutForm.get('postcode')?.touched" class="error-message">
+            <span *ngIf="checkoutForm.get('postcode')?.errors?.['required']">Postcode is required.</span>
+            <span *ngIf="checkoutForm.get('postcode')?.errors?.['pattern']">Enter a valid UK postcode.</span>
+          </div>
         </div>
         
         <div class="checkout_field">
@@ -86,6 +106,9 @@
             [class.error]="checkoutForm.get('city')?.invalid && checkoutForm.get('city')?.touched"
             placeholder="London"
           >
+          <div *ngIf="checkoutForm.get('city')?.invalid && checkoutForm.get('city')?.touched" class="error-message">
+            <span *ngIf="checkoutForm.get('city')?.errors?.['required']">City is required.</span>
+          </div>
         </div>
         
         <div class="checkout_field">
@@ -138,6 +161,10 @@
               [class.error]="checkoutForm.get('eMoneyNumber')?.invalid && checkoutForm.get('eMoneyNumber')?.touched"
               placeholder="238521993"
             >
+            <div *ngIf="checkoutForm.get('eMoneyNumber')?.invalid && checkoutForm.get('eMoneyNumber')?.touched" class="error-message">
+              <span *ngIf="checkoutForm.get('eMoneyNumber')?.errors?.['required']">e-Money Number is required.</span>
+              <span *ngIf="checkoutForm.get('eMoneyNumber')?.errors?.['pattern']">Enter a valid e-Money Number.</span>
+            </div>
           </div>
           
           <div class="checkout_field">
@@ -149,11 +176,13 @@
               [class.error]="checkoutForm.get('eMoneyPin')?.invalid && checkoutForm.get('eMoneyPin')?.touched"
               placeholder="6891"
             >
+            <div *ngIf="checkoutForm.get('eMoneyPin')?.invalid && checkoutForm.get('eMoneyPin')?.touched" class="error-message">
+              <span *ngIf="checkoutForm.get('eMoneyPin')?.errors?.['required']">e-Money PIN is required.</span>
+              <span *ngIf="checkoutForm.get('eMoneyPin')?.errors?.['pattern']">Enter a valid e-Money PIN.</span>
+            </div>
           </div>
         </ng-container>
       </div>
     </section>
-
-   
   </form>
 </div>

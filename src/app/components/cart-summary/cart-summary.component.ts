@@ -38,9 +38,10 @@ export class SummaryComponent {
   }
 
   get shippingCost(): number {
-    return this.subtotal * this.shippingRate;
+    const cost = this.subtotal * this.shippingRate;
+    // set shipping cap at £30
+    return cost > 30 ? 30 : cost;
   }
-
   get vat(): number {
     return parseFloat((this.subtotal * this.vatRate).toFixed(2));
   }
