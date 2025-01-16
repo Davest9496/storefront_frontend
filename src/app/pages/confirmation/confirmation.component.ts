@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+// confirmation.component.ts
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { CartService } from '../../services/cart.service';
@@ -11,14 +12,20 @@ import { CartItem } from '../../interfaces/cart.interface';
   templateUrl: './confirmation.component.html',
   styleUrls: ['./confirmation.component.scss'],
 })
-export class ConfirmationComponent {
+export class ConfirmationComponent implements OnInit {
   items: CartItem[] = [];
+  firstItem: CartItem | null = null;
+  remainingItems: number = 0;
   grandTotal: number = 0;
 
-  constructor(private router: Router, private cartService: CartService) {
-    // Get cart items before they're cleared
+  constructor(private router: Router, private cartService: CartService) {}
+
+  ngOnInit(): void {
+    // Get cart state and set up display data
     this.cartService.getCartState().subscribe((state) => {
       this.items = state.items;
+      this.firstItem = this.items[0] || null;
+      this.remainingItems = Math.max(0, this.items.length - 1);
       this.grandTotal = this.calculateTotal();
     });
   }
@@ -34,7 +41,7 @@ export class ConfirmationComponent {
   }
 
   backToHome(): void {
-    this.cartService.removeAll(); // Clear cart
+    this.cartService.removeAll();
     this.router.navigate(['/']);
   }
 }

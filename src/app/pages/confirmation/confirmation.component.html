@@ -1,5 +1,8 @@
 <!-- confirmation.component.html -->
-<div class="confirmation">
+<section class="confirmation">
+  <!-- Overlay Background -->
+  <div class="confirmation_overlay"></div>
+  
   <div class="confirmation_modal">
     <!-- Success Icon -->
     <div class="confirmation_icon">
@@ -21,24 +24,24 @@
 
     <!-- Order Summary -->
     <div class="confirmation_summary">
-      <!-- Items List -->
-      <div class="confirmation_items">
-        @if (items.length > 0) {
+      <!-- Main Item Section -->
+      <div class="confirmation_main">
+        @if (firstItem) {
           <div class="confirmation_item">
-            <div class="confirmation_item-main">
-              <img [src]="items[0].image" [alt]="items[0].name">
+            <div class="confirmation_item-info">
+              <img [src]="firstItem.image" [alt]="firstItem.name" class="confirmation_item-image">
               <div class="confirmation_item-details">
-                <h3>{{ items[0].name }}</h3>
-                <p>$ {{ items[0].price | number }}</p>
+                <h3>{{ firstItem.name }}</h3>
+                <p>$ {{ firstItem.price | number }}</p>
               </div>
-              <span class="confirmation_item-quantity">x{{ items[0].quantity }}</span>
             </div>
-            @if (items.length > 1) {
-              <p class="confirmation_others">
-                and {{ items.length - 1 }} other item(s)
-              </p>
-            }
+            <span class="confirmation_item-quantity">x{{ firstItem.quantity }}</span>
           </div>
+          @if (remainingItems > 0) {
+            <div class="confirmation_others">
+              and {{ remainingItems }} other item(s)
+            </div>
+          }
         }
       </div>
 
@@ -54,4 +57,4 @@
       BACK TO HOME
     </button>
   </div>
-</div>
+</section>

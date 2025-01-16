@@ -10,9 +10,9 @@ import { RouterModule } from '@angular/router';
   imports: [RouterModule],
   template: `
     <section class="not-found">
-      <h1 class="not-found_title">Category Not Found</h1>
+      <h1 class="not-found_title">Page Not Found</h1>
       <p class="not-found_text">
-        We couldn't find the category you're looking for.
+        We couldn't find the page you're looking for.
       </p>
       <button class="not-found_button" routerLink="/">RETURN TO HOME</button>
     </section>

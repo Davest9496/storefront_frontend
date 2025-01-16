@@ -1,4 +1,5 @@
 import { Component, Input } from '@angular/core';
+import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormGroup } from '@angular/forms';
 import { CartService } from '../../services/cart.service';
@@ -14,8 +15,7 @@ import { CartItem } from '../../interfaces/cart.interface';
 export class SummaryComponent {
   @Input() checkoutForm!: FormGroup;
   @Input() formStatusChange!: boolean;
-
-  constructor(private cartService: CartService) {}
+  constructor(private cartService: CartService, private router: Router) {}
 
   readonly shippingRate = 0.05;
   readonly vatRate = 0.2;
@@ -44,15 +44,30 @@ export class SummaryComponent {
     return this.subtotal + this.shippingCost + this.vat;
   }
 
-  handleCheckout(): void {
-    // Handle routing here
-    // This will be triggered when the checkout form is submitted
-    console.log('Processing checkout:', {
-      items: this.items,
-      subtotal: this.subtotal,
-      shipping: this.shippingCost,
-      vat: this.vat,
-      total: this.grandTotal,
-    });
+  async handleCheckout(): Promise<void> {
+
+    try {
+      
+
+      const orderData = {
+        items: this.items,
+        subtotal: this.subtotal,
+        shipping: this.shippingCost,
+        vat: this.vat,
+        total: this.grandTotal,
+        formData: this.checkoutForm?.value,
+      };
+
+      console.log('Processing order:', orderData);
+
+      // Simulate API call delay
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+
+      await this.router.navigate(['/checkout/confirmation']);
+    } catch (error) {
+      console.error('Error processing checkout:', error);
+    } finally {
+      
+    }
   }
 }
