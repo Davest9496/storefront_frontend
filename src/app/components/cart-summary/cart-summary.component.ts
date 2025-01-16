@@ -24,6 +24,7 @@ export class SummaryComponent {
 
   readonly shippingRate = 0.05;
   readonly vatRate = 0.2;
+  loading: boolean = false;
 
   // Get items directly from cart service
   get items(): CartItem[] {
@@ -51,6 +52,7 @@ export class SummaryComponent {
   }
 
   async handleCheckout(): Promise<void> {
+    this.loading = true;
     try {
       const orderData = {
         items: this.items,
@@ -67,12 +69,13 @@ export class SummaryComponent {
       this.orderService.setGrandTotal(this.grandTotal);
 
       // Simulate API call delay
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      await new Promise((resolve) => setTimeout(resolve, 3000));
 
       await this.router.navigate(['/checkout/confirmation']);
     } catch (error) {
       console.error('Error processing checkout:', error);
     } finally {
+      this.loading= false;
     }
   }
 }

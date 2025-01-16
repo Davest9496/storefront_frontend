@@ -42,11 +42,14 @@
     </div>
   </div>
   
-  <button 
+ <button 
     class="summary_button" 
-    [disabled]="!formStatusChange"
     (click)="handleCheckout()"
+    [disabled]="!formStatusChange || loading"
   >
-    CONTINUE & PAY
+    <ng-container *ngIf="!loading">CONTINUE & PAY</ng-container>
+    <ng-container *ngIf="loading">
+      <span class="spinner"></span> Processing...
+    </ng-container>
   </button>
 </section>
