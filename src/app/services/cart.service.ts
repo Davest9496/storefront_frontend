@@ -7,14 +7,29 @@ import { Router } from '@angular/router';
   providedIn: 'root',
 })
 export class CartService {
-  constructor(private router: Router) {}
+  private readonly CART_STORAGE_KEY = 'cartState';
 
   private initialState: CartState = {
     items: [],
     isVisible: false,
   };
 
-  private cartState = new BehaviorSubject<CartState>(this.initialState);
+  private cartState = new BehaviorSubject<CartState>(this.loadCartState());
+
+  constructor(private router: Router) {
+    this.cartState.subscribe((state) => {
+      this.saveCartState(state);
+    });
+  }
+
+  private loadCartState(): CartState {
+    const storedState = localStorage.getItem(this.CART_STORAGE_KEY);
+    return storedState ? JSON.parse(storedState) : this.initialState;
+  }
+
+  private saveCartState(state: CartState): void {
+    localStorage.setItem(this.CART_STORAGE_KEY, JSON.stringify(state));
+  }
 
   getCartState(): Observable<CartState> {
     return this.cartState.asObservable();
