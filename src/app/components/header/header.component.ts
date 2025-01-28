@@ -88,6 +88,14 @@ export class HeaderComponent {
     }
   }
 
+  closeProfileDropdown(): void {
+    this.isProfileDropdownOpen = false;
+    if (this.hoverTimeout) {
+      clearTimeout(this.hoverTimeout);
+      this.hoverTimeout = null;
+    }
+  }
+
   // Close menu on window resize (tablet and above)
   @HostListener('window:resize')
   onResize(): void {

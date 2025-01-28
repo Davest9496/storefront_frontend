@@ -99,22 +99,23 @@
             <hr class="header_profile-divider">
             <ul class="header_profile-menu">
                 <li>
-                    <a routerLink="/profile">Update Profile</a>
+                    <a routerLink="/profile" 
+                   (click)="closeProfileDropdown()">Update Profile</a>
                 </li>
                 <li>
-                    <a routerLink="/profile/password">Change Password</a>
+                    <a routerLink="/profile/password" (click)="closeProfileDropdown()">Change Password</a>
                 </li>
                 <li>
-                    <button (click)="authService.logout()">Logout</button>
+                    <button (click)="authService.logout()"; (click)="closeProfileDropdown()">Logout</button>
                 </li>
             </ul>
         } @else {
             <ul class="header_profile-menu">
                 <li>
-                    <a routerLink="/auth/login">Login</a>
+                    <a routerLink="/auth/login" (click)="closeProfileDropdown()">Login</a>
                 </li>
                 <li>
-                    <a routerLink="/auth/register">Register</a>
+                    <a routerLink="/auth/register" (click)="closeProfileDropdown()">Register</a>
                 </li>
             </ul>
         }
