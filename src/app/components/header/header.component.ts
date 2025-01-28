@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { CartService } from '@app/services/cart.service';
 import { CartComponent } from '../cart/cart.component';
 import { CartState, CartItem } from '@app/interfaces/cart.interface';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-header',
@@ -14,10 +15,30 @@ import { CartState, CartItem } from '@app/interfaces/cart.interface';
 })
 export class HeaderComponent {
   isMenuOpen = false;
-  constructor(public cartService: CartService) {}
+  isProfileDropdownOpen = false;
+  hoverTimeout: any = null;
+
+  constructor(
+    public cartService: CartService,
+    public authService: AuthService
+  ) {}
 
   toggleCart(): void {
     this.cartService.toggleCart();
+  }
+
+  // Add new method to toggle profile dropdown
+  toggleProfileDropdown(event: Event): void {
+    event.stopPropagation();
+    this.isProfileDropdownOpen = !this.isProfileDropdownOpen;
+  }
+
+  // Close profile dropdown when clicking outside
+  @HostListener('window:click')
+  onWindowClick(): void {
+    if (this.isProfileDropdownOpen) {
+      this.isProfileDropdownOpen = false;
+    }
   }
 
   getItemCount(state: CartState): number {
@@ -47,6 +68,26 @@ export class HeaderComponent {
     }
   }
 
+  // Handle hover events
+  onProfileHover(isHovering: boolean): void {
+    if (window.innerWidth >= 992) {
+      // Only apply hover on tablet and above
+      if (isHovering) {
+        // Clear any existing timeout
+        if (this.hoverTimeout) {
+          clearTimeout(this.hoverTimeout);
+          this.hoverTimeout = null;
+        }
+        this.isProfileDropdownOpen = true;
+      } else {
+        // Add small delay before closing
+        this.hoverTimeout = setTimeout(() => {
+          this.isProfileDropdownOpen = false;
+        }, 200);
+      }
+    }
+  }
+
   // Close menu on window resize (tablet and above)
   @HostListener('window:resize')
   onResize(): void {
@@ -55,16 +96,31 @@ export class HeaderComponent {
     }
   }
 
-  // Close menu when clicking outside
   @HostListener('window:click', ['$event'])
   onClick(event: Event): void {
     const target = event.target as HTMLElement;
+
+    // Handle menu closing
     if (
       this.isMenuOpen &&
       !target.closest('.header_menu-btn') &&
       !target.closest('.header_links')
     ) {
       this.closeMenu();
+    }
+
+    // Handle profile dropdown closing - only if not hovering
+    if (
+      this.isProfileDropdownOpen &&
+      !target.closest('.header_profile-btn') &&
+      !target.closest('.header_profile-dropdown')
+    ) {
+      // Clear any hover timeout
+      if (this.hoverTimeout) {
+        clearTimeout(this.hoverTimeout);
+        this.hoverTimeout = null;
+      }
+      this.isProfileDropdownOpen = false;
     }
   }
 }
