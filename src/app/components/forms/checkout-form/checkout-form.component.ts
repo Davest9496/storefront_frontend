@@ -1,126 +1,155 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import {
-  FormBuilder,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
-import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
+import { FormsModule } from '@angular/forms';
+
+interface FormData {
+  name: string;
+  email: string;
+  phone: string;
+  addressLine1: string;
+  addressLine2: string;
+  city: string;
+  county: string;
+  postcode: string;
+  paymentMethod: 'e-Money' | 'cash';
+  eMoneyNumber: string;
+  eMoneyPin: string;
+}
+
+type ErrorFields = {
+  [K in keyof FormData]?: boolean;
+};
 
 @Component({
   selector: 'app-checkout-form',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './checkout-form.component.html',
   styleUrls: ['./checkout-form.component.scss'],
 })
 export class CheckoutFormComponent implements OnInit {
-  checkoutForm: FormGroup;
   @Output() formStatusChange = new EventEmitter<boolean>();
-  @Output() formValuesChange = new EventEmitter<any>();
+  @Output() formValuesChange = new EventEmitter<FormData>();
 
-  // UK Phone number regex pattern
-  private ukPhoneRegex =
-    /^(?:(?:\+44\s?|0)(?:(?:(?:\d{2}\s?\d{4}\s?\d{4})|(?:\d{3}\s?\d{3}\s?\d{4})|(?:\d{4}\s?\d{6}))))$/;
+  formData: FormData = {
+    name: '',
+    email: '',
+    phone: '',
+    addressLine1: '',
+    addressLine2: '',
+    city: '',
+    county: '',
+    postcode: '',
+    paymentMethod: 'e-Money',
+    eMoneyNumber: '',
+    eMoneyPin: '',
+  };
 
-  // UK Postcode regex pattern
-  private ukPostcodeRegex = /^[A-Z]{1,2}[0-9][A-Z0-9]? ?[0-9][A-Z]{2}$/i;
+  patterns = {
+    phone:
+      /^(?:(?:\+44\s?|0)(?:(?:(?:\d{2}\s?\d{4}\s?\d{4})|(?:\d{3}\s?\d{3}\s?\d{4})|(?:\d{4}\s?\d{6}))))$/,
+    postcode: /^[A-Z]{1,2}[0-9][A-Z0-9]? ?[0-9][A-Z]{2}$/i,
+    eMoneyNumber: /^\d{9}$/,
+    eMoneyPin: /^\d{4}$/,
+  };
+
+  errors: ErrorFields = {};
 
   get showEMoneyFields(): boolean {
-    return this.checkoutForm?.get('paymentMethod')?.value === 'e-Money';
-  }
-
-  constructor(private fb: FormBuilder) {
-    this.checkoutForm = this.fb.group({
-      // Billing Details
-      name: ['', [Validators.required, Validators.minLength(2)]],
-      email: ['', [Validators.required, Validators.email]],
-      phone: ['', [Validators.required, Validators.pattern(this.ukPhoneRegex)]],
-
-      // Shipping Info
-      addressLine1: ['', [Validators.required, Validators.minLength(5)]],
-      addressLine2: [''],
-      city: ['', Validators.required],
-      county: [''],
-      postcode: [
-        '',
-        [Validators.required, Validators.pattern(this.ukPostcodeRegex)],
-      ],
-
-      // Payment Details
-      paymentMethod: ['e-Money', Validators.required],
-      eMoneyNumber: [''],
-      eMoneyPin: [''],
-    });
+    return this.formData.paymentMethod === 'e-Money';
   }
 
   ngOnInit(): void {
-    // Monitor form changes
-    this.checkoutForm.valueChanges
-      .pipe(debounceTime(300), distinctUntilChanged())
-      .subscribe(() => {
-        this.checkAndEmitFormStatus();
-      });
-
-    // Handle payment method changes
-    this.checkoutForm.get('paymentMethod')?.valueChanges.subscribe((method) => {
-      this.handlePaymentMethodChange(method);
-    });
+    this.validateForm();
   }
 
-  private checkAndEmitFormStatus(): void {
-    const isValid = this.checkoutForm.valid;
-
-    // Required fields based on payment method
-    const requiredFields = [
-      'name',
-      'email',
-      'phone',
-      'addressLine1',
-      'city',
-      'postcode',
-    ];
-
-    if (this.showEMoneyFields) {
-      requiredFields.push('eMoneyNumber', 'eMoneyPin');
+  // Separate method for handling payment method changes
+  onPaymentMethodChange(value: 'e-Money' | 'cash') {
+    this.formData.paymentMethod = value;
+    if (!this.showEMoneyFields) {
+      this.formData.eMoneyNumber = '';
+      this.formData.eMoneyPin = '';
+      delete this.errors['eMoneyNumber'];
+      delete this.errors['eMoneyPin'];
     }
+    this.validateForm();
+  }
 
-    const allRequiredFieldsFilled = requiredFields.every((field) => {
-      const control = this.checkoutForm.get(field);
-      return control?.valid && control.value !== '';
-    });
+  // Type-safe method for handling string inputs
+  onStringInputChange(
+    field: Exclude<keyof FormData, 'paymentMethod'>,
+    value: string
+  ) {
+    // @ts-ignore - We know this is safe because we excluded paymentMethod
+    this.formData[field] = value;
+    this.validateField(field);
+    this.validateForm();
+  }
 
-    this.formStatusChange.emit(allRequiredFieldsFilled);
+  validateField(field: keyof FormData) {
+    const value = this.formData[field];
+    this.errors[field] = false;
 
-    if (allRequiredFieldsFilled) {
-      this.formValuesChange.emit(this.checkoutForm.value);
+    switch (field) {
+      case 'name':
+        if (!value || value.length < 2) {
+          this.errors[field] = true;
+        }
+        break;
+      case 'email':
+        if (!value || !value.includes('@')) {
+          this.errors[field] = true;
+        }
+        break;
+      case 'phone':
+        if (!value || !this.patterns.phone.test(value)) {
+          this.errors[field] = true;
+        }
+        break;
+      case 'addressLine1':
+        if (!value || value.length < 5) {
+          this.errors[field] = true;
+        }
+        break;
+      case 'city':
+        if (!value) {
+          this.errors[field] = true;
+        }
+        break;
+      case 'postcode':
+        if (!value || !this.patterns.postcode.test(value)) {
+          this.errors[field] = true;
+        }
+        break;
+      case 'eMoneyNumber':
+        if (
+          this.showEMoneyFields &&
+          (!value || !this.patterns.eMoneyNumber.test(value))
+        ) {
+          this.errors[field] = true;
+        }
+        break;
+      case 'eMoneyPin':
+        if (
+          this.showEMoneyFields &&
+          (!value || !this.patterns.eMoneyPin.test(value))
+        ) {
+          this.errors[field] = true;
+        }
+        break;
     }
   }
 
-  private handlePaymentMethodChange(method: string): void {
-    const eMoneyNumber = this.checkoutForm.get('eMoneyNumber');
-    const eMoneyPin = this.checkoutForm.get('eMoneyPin');
+  validateForm() {
+    (Object.keys(this.formData) as Array<keyof FormData>).forEach((field) => {
+      this.validateField(field);
+    });
 
-    if (method === 'e-Money') {
-      eMoneyNumber?.setValidators([
-        Validators.required,
-        Validators.pattern(/^\d{9}$/),
-      ]);
-      eMoneyPin?.setValidators([
-        Validators.required,
-        Validators.pattern(/^\d{4}$/),
-      ]);
-    } else {
-      eMoneyNumber?.clearValidators();
-      eMoneyPin?.clearValidators();
-      eMoneyNumber?.setValue('');
-      eMoneyPin?.setValue('');
+    const isValid = !Object.values(this.errors).some((error) => error);
+
+    this.formStatusChange.emit(isValid);
+    if (isValid) {
+      this.formValuesChange.emit(this.formData);
     }
-
-    eMoneyNumber?.updateValueAndValidity();
-    eMoneyPin?.updateValueAndValidity();
-
-    this.checkAndEmitFormStatus();
   }
 }

@@ -1,5 +1,5 @@
 <div class="checkout">
-  <form [formGroup]="checkoutForm" class="checkout_form">
+  <form class="checkout_form" (ngSubmit)="validateForm()">
     <h1 class="checkout_title">CHECKOUT</h1>
     
     <!-- Billing Details Section -->
@@ -11,13 +11,14 @@
           <input 
             id="name"
             type="text" 
-            formControlName="name"
-            [class.error]="checkoutForm.get('name')?.invalid && checkoutForm.get('name')?.touched"
+            [(ngModel)]="formData.name"
+            (ngModelChange)="onStringInputChange('name', $event)"
+            name="name"
+            [class.error]="errors['name']"
             placeholder="Hugo Dee"
           >
-          <div *ngIf="checkoutForm.get('name')?.invalid && checkoutForm.get('name')?.touched" class="error-message">
-            <span *ngIf="checkoutForm.get('name')?.errors?.['required']">Name is required.</span>
-            <span *ngIf="checkoutForm.get('name')?.errors?.['minlength']">Name must be at least 2 characters long.</span>
+          <div *ngIf="errors['name']" class="error-message">
+            Name must be at least 2 characters long.
           </div>
         </div>
         
@@ -26,13 +27,14 @@
           <input 
             id="email"
             type="email" 
-            formControlName="email"
-            [class.error]="checkoutForm.get('email')?.invalid && checkoutForm.get('email')?.touched"
+            [(ngModel)]="formData.email"
+            (ngModelChange)="onStringInputChange('email', $event)"
+            name="email"
+            [class.error]="errors['email']"
             placeholder="hugo@mail.co.uk"
           >
-          <div *ngIf="checkoutForm.get('email')?.invalid && checkoutForm.get('email')?.touched" class="error-message">
-            <span *ngIf="checkoutForm.get('email')?.errors?.['required']">Email is required.</span>
-            <span *ngIf="checkoutForm.get('email')?.errors?.['email']">Enter a valid email address.</span>
+          <div *ngIf="errors['email']" class="error-message">
+            Enter a valid email address.
           </div>
         </div>
         
@@ -41,13 +43,14 @@
           <input 
             id="phone"
             type="tel" 
-            formControlName="phone"
-            [class.error]="checkoutForm.get('phone')?.invalid && checkoutForm.get('phone')?.touched"
+            [(ngModel)]="formData.phone"
+            (ngModelChange)="onStringInputChange('phone', $event)"
+            name="phone"
+            [class.error]="errors['phone']"
             placeholder="07123 456789"
           >
-          <div *ngIf="checkoutForm.get('phone')?.invalid && checkoutForm.get('phone')?.touched" class="error-message">
-            <span *ngIf="checkoutForm.get('phone')?.errors?.['required']">Phone number is required.</span>
-            <span *ngIf="checkoutForm.get('phone')?.errors?.['pattern']">Enter a valid UK phone number.</span>
+          <div *ngIf="errors['phone']" class="error-message">
+            Enter a valid UK phone number.
           </div>
         </div>
       </div>
@@ -58,17 +61,18 @@
       <h2 class="checkout_section-title">SHIPPING INFO</h2>
       <div class="checkout_grid">
         <div class="checkout_field checkout_field-full">
-          <label for="addressLine1">Address Line 1</label>
+          <label for="addressLine1">Your Address</label>
           <input 
             id="addressLine1"
             type="text" 
-            formControlName="addressLine1"
-            [class.error]="checkoutForm.get('addressLine1')?.invalid && checkoutForm.get('addressLine1')?.touched"
+            [(ngModel)]="formData.addressLine1"
+            (ngModelChange)="onStringInputChange('addressLine1', $event)"
+            name="addressLine1"
+            [class.error]="errors['addressLine1']"
             placeholder="137 Old Kent Road"
           >
-          <div *ngIf="checkoutForm.get('addressLine1')?.invalid && checkoutForm.get('addressLine1')?.touched" class="error-message">
-            <span *ngIf="checkoutForm.get('addressLine1')?.errors?.['required']">Address Line 1 is required.</span>
-            <span *ngIf="checkoutForm.get('addressLine1')?.errors?.['minlength']">Address Line 1 must be at least 5 characters long.</span>
+          <div *ngIf="errors['addressLine1']" class="error-message">
+            Address must be at least 5 characters long.
           </div>
         </div>
 
@@ -77,7 +81,9 @@
           <input 
             id="addressLine2"
             type="text" 
-            formControlName="addressLine2"
+            [(ngModel)]="formData.addressLine2"
+            (ngModelChange)="onStringInputChange('addressLine2', $event)"
+            name="addressLine2"
             placeholder="Flat 4B"
           >
         </div>
@@ -87,13 +93,14 @@
           <input 
             id="postcode"
             type="text" 
-            formControlName="postcode"
-            [class.error]="checkoutForm.get('postcode')?.invalid && checkoutForm.get('postcode')?.touched"
+            [(ngModel)]="formData.postcode"
+            (ngModelChange)="onStringInputChange('postcode', $event)"
+            name="postcode"
+            [class.error]="errors['postcode']"
             placeholder="SE1 5DP"
           >
-          <div *ngIf="checkoutForm.get('postcode')?.invalid && checkoutForm.get('postcode')?.touched" class="error-message">
-            <span *ngIf="checkoutForm.get('postcode')?.errors?.['required']">Postcode is required.</span>
-            <span *ngIf="checkoutForm.get('postcode')?.errors?.['pattern']">Enter a valid UK postcode.</span>
+          <div *ngIf="errors['postcode']" class="error-message">
+            Enter a valid UK postcode.
           </div>
         </div>
         
@@ -102,12 +109,14 @@
           <input 
             id="city"
             type="text" 
-            formControlName="city"
-            [class.error]="checkoutForm.get('city')?.invalid && checkoutForm.get('city')?.touched"
+            [(ngModel)]="formData.city"
+            (ngModelChange)="onStringInputChange('city', $event)"
+            name="city"
+            [class.error]="errors['city']"
             placeholder="London"
           >
-          <div *ngIf="checkoutForm.get('city')?.invalid && checkoutForm.get('city')?.touched" class="error-message">
-            <span *ngIf="checkoutForm.get('city')?.errors?.['required']">City is required.</span>
+          <div *ngIf="errors['city']" class="error-message">
+            City is required.
           </div>
         </div>
         
@@ -116,7 +125,9 @@
           <input 
             id="county"
             type="text" 
-            formControlName="county"
+            [(ngModel)]="formData.county"
+            (ngModelChange)="onStringInputChange('county', $event)"
+            name="county"
             placeholder="Greater London"
           >
         </div>
@@ -132,8 +143,10 @@
           <div class="checkout_radio-group">
             <label class="checkout_radio">
               <input 
-                type="radio" 
-                formControlName="paymentMethod"
+                type="radio"
+                name="paymentMethod"
+                [(ngModel)]="formData.paymentMethod"
+                (ngModelChange)="onPaymentMethodChange($event)"
                 value="e-Money"
               >
               <span class="checkout_radio-text">e-Money</span>
@@ -141,8 +154,10 @@
             
             <label class="checkout_radio">
               <input 
-                type="radio" 
-                formControlName="paymentMethod"
+                type="radio"
+                name="paymentMethod"
+                [(ngModel)]="formData.paymentMethod"
+                (ngModelChange)="onPaymentMethodChange($event)"
                 value="cash"
               >
               <span class="checkout_radio-text">Cash on Delivery</span>
@@ -157,13 +172,16 @@
             <input 
               id="eMoneyNumber"
               type="text" 
-              formControlName="eMoneyNumber"
-              [class.error]="checkoutForm.get('eMoneyNumber')?.invalid && checkoutForm.get('eMoneyNumber')?.touched"
+              [(ngModel)]="formData.eMoneyNumber"
+              (ngModelChange)="onStringInputChange('eMoneyNumber', $event)"
+              name="eMoneyNumber"
+              [class.error]="errors['eMoneyNumber']"
               placeholder="238521993"
+              maxlength="9"
+              pattern="\d{9}"
             >
-            <div *ngIf="checkoutForm.get('eMoneyNumber')?.invalid && checkoutForm.get('eMoneyNumber')?.touched" class="error-message">
-              <span *ngIf="checkoutForm.get('eMoneyNumber')?.errors?.['required']">e-Money Number is required.</span>
-              <span *ngIf="checkoutForm.get('eMoneyNumber')?.errors?.['pattern']">Enter a valid e-Money Number.</span>
+            <div *ngIf="errors['eMoneyNumber']" class="error-message">
+              Enter a valid 9-digit e-Money Number.
             </div>
           </div>
           
@@ -172,13 +190,16 @@
             <input 
               id="eMoneyPin"
               type="password" 
-              formControlName="eMoneyPin"
-              [class.error]="checkoutForm.get('eMoneyPin')?.invalid && checkoutForm.get('eMoneyPin')?.touched"
+              [(ngModel)]="formData.eMoneyPin"
+              (ngModelChange)="onStringInputChange('eMoneyPin', $event)"
+              name="eMoneyPin"
+              [class.error]="errors['eMoneyPin']"
               placeholder="6891"
+              maxlength="4"
+              pattern="\d{4}"
             >
-            <div *ngIf="checkoutForm.get('eMoneyPin')?.invalid && checkoutForm.get('eMoneyPin')?.touched" class="error-message">
-              <span *ngIf="checkoutForm.get('eMoneyPin')?.errors?.['required']">e-Money PIN is required.</span>
-              <span *ngIf="checkoutForm.get('eMoneyPin')?.errors?.['pattern']">Enter a valid e-Money PIN.</span>
+            <div *ngIf="errors['eMoneyPin']" class="error-message">
+              Enter a valid 4-digit e-Money PIN.
             </div>
           </div>
         </ng-container>
