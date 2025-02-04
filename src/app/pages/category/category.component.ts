@@ -1,12 +1,10 @@
-// src/app/pages/category/category.component.ts
-// Component responsible for displaying category pages and handling invalid category routing
-
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { CategoryService } from '../../services/category.service';
 import { CategoryItemComponent } from './category-item/category-item.component';
 import { Category, CategoryItem } from '../../interfaces/category.interface';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-category',
@@ -15,22 +13,11 @@ import { Category, CategoryItem } from '../../interfaces/category.interface';
   templateUrl: './category.component.html',
   styleUrls: ['./category.component.scss'],
 })
-export class CategoryComponent implements OnInit {
-  // Private field to store category data
-  private _category?: Category;
-
-  // Public getter to check if category exists
-  get hasCategory(): boolean {
-    return !!this._category;
-  }
-
-  // Public getter to safely access category data
-  get categoryData(): Category {
-    if (!this._category) {
-      throw new Error('Attempting to access category when it is not defined');
-    }
-    return this._category;
-  }
+export class CategoryComponent implements OnInit, OnDestroy {
+  category?: Category;
+  loading = false;
+  error = '';
+  private destroy$ = new Subject<void>();
 
   constructor(
     private route: ActivatedRoute,
@@ -39,23 +26,44 @@ export class CategoryComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    // Subscribe to route parameter changes to handle navigation between categories
-    this.route.params.subscribe((params) => {
-      // Get category name from route parameters
-      const categoryName = params['category'];
-
-      // Fetch category data using the service
-      this._category = this.categoryService.getCategoryByName(categoryName);
-
-      // If category doesn't exist, navigate to not-found page
-      if (!this._category) {
-        this.router.navigate(['/not-found']);
+    // Subscribe to route parameter changes
+    this.route.params.pipe(takeUntil(this.destroy$)).subscribe((params) => {
+      if (params['category']) {
+        this.loadCategory(params['category']);
       }
     });
   }
 
-  // TrackBy function for better list rendering performance
-  trackById(index: number, item: CategoryItem): string {
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
+  private loadCategory(categoryName: string): void {
+    this.loading = true;
+    this.error = '';
+
+    this.categoryService
+      .getCategoryByName(categoryName)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (category) => {
+          this.loading = false;
+          if (category) {
+            this.category = category;
+          } else {
+            this.router.navigate(['/not-found']);
+          }
+        },
+        error: (err) => {
+          this.loading = false;
+          this.error = 'Failed to load category. Please try again later.';
+          console.error('Error loading category:', err);
+        },
+      });
+  }
+
+  trackById(_: number, item: CategoryItem): string {
     return item.id;
   }
 }

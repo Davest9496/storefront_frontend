@@ -5,7 +5,7 @@ import { MenuComponent } from '@app/components/menu/menu.component';
 import { PopularProductsComponent } from '@app/components/popular-products/popular-products.component';
 import { Product } from '@app/interfaces/product.interface';
 import { CategoryService } from '../../services/category.service';
-import { filter, Subscription } from 'rxjs';
+import { filter, Subscription, switchMap, tap } from 'rxjs';
 import { CartService } from '@app/services/cart.service';
 
 @Component({
@@ -15,10 +15,13 @@ import { CartService } from '@app/services/cart.service';
   templateUrl: './product-details.component.html',
   styleUrls: ['./product-details.component.scss'],
 })
-export class ProductDetailsComponent implements OnInit {
+export class ProductDetailsComponent implements OnInit, OnDestroy {
   product?: Product;
   quantity: number = 1;
+  loading = false;
+  error = '';
   private routeSubscription?: Subscription;
+  private productSubscription?: Subscription;
 
   constructor(
     private route: ActivatedRoute,
@@ -28,11 +31,14 @@ export class ProductDetailsComponent implements OnInit {
   ) {
     // Subscribe to route changes while on the same component
     this.routeSubscription = this.router.events
-      .pipe(filter((event) => event instanceof NavigationEnd))
-      .subscribe(() => {
-        const productId = this.route.snapshot.params['id'];
-        this.findProduct(productId);
-      });
+      .pipe(
+        filter((event) => event instanceof NavigationEnd),
+        tap(() => {
+          const productId = this.route.snapshot.params['id'];
+          this.findProduct(productId);
+        })
+      )
+      .subscribe();
   }
 
   ngOnInit(): void {
@@ -41,32 +47,51 @@ export class ProductDetailsComponent implements OnInit {
   }
 
   ngOnDestroy(): void {
-    // Clean up subscription to prevent memory leaks
-    if (this.routeSubscription) {
-      this.routeSubscription.unsubscribe();
-    }
+    // Clean up subscriptions to prevent memory leaks
+    this.routeSubscription?.unsubscribe();
+    this.productSubscription?.unsubscribe();
   }
 
   private findProduct(productId: string): void {
-    const categories = this.categoryService.getCategories();
-    for (const category of categories) {
-      const product = category.items.find((item) => item.id === productId);
+    this.loading = true;
+    this.error = '';
 
-      if (product) {
-        this.product = {
-          ...product,
-          category: category.name.toLocaleLowerCase(),
-          price: product.price || 0,
-        } as Product;
-
-        return;
-      }
-    }
-    // If product not found, navigate to not-found page
-    this.router.navigate(['/not-found']);
+    this.productSubscription = this.categoryService
+      .getCategories()
+      .pipe(
+        tap((categories) => {
+          let found = false;
+          for (const category of categories) {
+            const product = category.items.find(
+              (item) => item.id === productId
+            );
+            if (product) {
+              this.product = {
+                ...product,
+                category: category.name.toLowerCase(),
+                price: product.price || 0,
+              } as Product;
+              found = true;
+              break;
+            }
+          }
+          if (!found) {
+            this.router.navigate(['/not-found']);
+          }
+        })
+      )
+      .subscribe({
+        next: () => {
+          this.loading = false;
+        },
+        error: (err) => {
+          this.error = 'Failed to load product details';
+          this.loading = false;
+          console.error('Error loading product:', err);
+        },
+      });
   }
 
-  // Get method to construct image paths
   getImagePath(
     imageNumber: number,
     size: 'mobile' | 'tablet' | 'desktop'
@@ -98,8 +123,6 @@ export class ProductDetailsComponent implements OnInit {
         this.product.images.mobile
       );
       this.quantity = 1;
-      //-- Optionally show the cart after adding --//
-      // this.cartService.toggleCart();
     }
   }
 

@@ -1,4 +1,20 @@
-<div class="product" *ngIf="product">
+<!-- Loading State -->
+<div *ngIf="loading" class="product_loading">
+  <div class="product_loading-content">
+    Loading product details...
+  </div>
+</div>
+
+<!-- Error State -->
+<div *ngIf="error" class="product_error">
+  <div class="product_error-content">
+    {{ error }}
+    <button class="product_back" (click)="goBack()">Go Back</button>
+  </div>
+</div>
+
+<!-- Product Content -->
+<div class="product" *ngIf="product && !loading && !error">
   <!-- Back Button -->
   <button class="product_back" (click)="goBack()">Go Back</button>
 
@@ -38,81 +54,82 @@
   </div>
 
   <div class="product_content-wrapper">
-  <!-- Features Section -->
-  <div class="product_features">
-    <h2>FEATURES</h2>
-    <article *ngFor="let feature of product.features">
-      <p>{{ feature }}</p>
-    </article>
+    <!-- Features Section -->
+    <div class="product_features">
+      <h2>FEATURES</h2>
+      <article *ngFor="let feature of product.features">
+        <p>{{ feature }}</p>
+      </article>
+    </div>
+
+    <!-- In The Box Section -->
+    <div class="product_box">
+      <h2 class="product_box-title">IN THE BOX</h2>
+      <ul class="product_items">
+        <li *ngFor="let item of product.includes">
+          <span class="product_quantity-label">{{ item.quantity }}x</span>
+          <span class="product_item-name">{{ item.item }}</span>
+        </li>
+      </ul>
+    </div>
   </div>
 
-  <!-- In The Box Section -->
-  <div class="product_box">
-    <h2 class="product_box-title">IN THE BOX</h2>
-    <ul class="product_items">
-      <li *ngFor="let item of product.includes">
-        <span class="product_quantity-label">{{ item.quantity }}x</span>
-        <span class="product_item-name">{{ item.item }}</span>
-      </li>
-    </ul>
+  <!-- Gallery Section -->
+  <div class="product_gallery">
+    <div class="product_gallery-grid">
+      <!-- First Gallery Image -->
+      <picture class="product_gallery-item product_gallery-item--small">
+        <source 
+          [srcset]="getImagePath(1, 'desktop')"
+          media="(min-width: 1200px)"
+        >
+        <source 
+          [srcset]="getImagePath(1, 'tablet')"
+          media="(min-width: 768px)"
+        >
+        <img 
+          [src]="getImagePath(1, 'mobile')"
+          [alt]="product.name + ' gallery image 1'"
+          class="product_gallery-img"
+        >
+      </picture>
+
+      <!-- Second Gallery Image -->
+      <picture class="product_gallery-item product_gallery-item--small">
+        <source 
+          [srcset]="getImagePath(2, 'desktop')"
+          media="(min-width: 1200px)"
+        >
+        <source 
+          [srcset]="getImagePath(2, 'tablet')"
+          media="(min-width: 768px)"
+        >
+        <img 
+          [src]="getImagePath(2, 'mobile')"
+          [alt]="product.name + ' gallery image 2'"
+          class="product_gallery-img"
+        >
+      </picture>
+
+      <!-- Third Gallery Image -->
+      <picture class="product_gallery-item product_gallery-item--large">
+        <source 
+          [srcset]="getImagePath(3, 'desktop')"
+          media="(min-width: 1200px)"
+        >
+        <source 
+          [srcset]="getImagePath(3, 'tablet')"
+          media="(min-width: 768px)"
+        >
+        <img 
+          [src]="getImagePath(3, 'mobile')"
+          [alt]="product.name + ' gallery image 3'"
+          class="product_gallery-img"
+        >
+      </picture>
+    </div>
   </div>
 </div>
 
- <!-- Gallery Section -->
-<div class="product_gallery">
-  <div class="product_gallery-grid">
-    <!-- First Gallery Image -->
-    <picture class="product_gallery-item product_gallery-item--small">
-      <source 
-        [srcset]="'assets/product-' + product.id + '-' + product.category.toLowerCase() + '/desktop/image-gallery-1.jpg'"
-        media="(min-width: 1200px)"
-      >
-      <source 
-        [srcset]="'assets/product-' + product.id + '-' + product.category.toLowerCase() + '/tablet/image-gallery-1.jpg'"
-        media="(min-width: 768px)"
-      >
-      <img 
-        [src]="'assets/product-' + product.id + '-' + product.category.toLowerCase() + '/mobile/image-gallery-1.jpg'"
-        [alt]="product.name + ' gallery image 1'"
-        class="product_gallery-img"
-      >
-    </picture>
-
-    <!-- Second Gallery Image -->
-    <picture class="product_gallery-item product_gallery-item--small">
-      <source 
-        [srcset]="'assets/product-' + product.id + '-' + product.category.toLowerCase() + '/desktop/image-gallery-2.jpg'"
-        media="(min-width: 1200px)"
-      >
-      <source 
-        [srcset]="'assets/product-' + product.id + '-' + product.category.toLowerCase() + '/tablet/image-gallery-2.jpg'"
-        media="(min-width: 768px)"
-      >
-      <img 
-        [src]="'assets/product-' + product.id + '-' + product.category.toLowerCase() + '/mobile/image-gallery-2.jpg'"
-        [alt]="product.name + ' gallery image 2'"
-        class="product_gallery-img"
-      >
-    </picture>
-
-    <!-- Third Gallery Image -->
-    <picture class="product_gallery-item product_gallery-item--large">
-      <source 
-        [srcset]="'assets/product-' + product.id + '-' + product.category.toLowerCase() + '/desktop/image-gallery-3.jpg'"
-        media="(min-width: 1200px)"
-      >
-      <source 
-        [srcset]="'assets/product-' + product.id + '-' + product.category.toLowerCase() + '/tablet/image-gallery-3.jpg'"
-        media="(min-width: 768px)"
-      >
-      <img 
-        [src]="'assets/product-' + product.id + '-' + product.category.toLowerCase() + '/mobile/image-gallery-3.jpg'"
-        [alt]="product.name + ' gallery image 3'"
-        class="product_gallery-img"
-      >
-    </picture>
-  </div>
-</div>
-</div>
-<app-menu/>
-<app-popular-products/>
+<app-menu *ngIf="!loading && !error"/>
+<app-popular-products *ngIf="!loading && !error"/>

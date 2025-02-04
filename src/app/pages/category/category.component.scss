@@ -3,6 +3,53 @@
 @use '../../styles/abstracts/mixins' as m;
 
 .category {
+  &_loading,
+  &_error {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 200px;
+    padding: 2rem 1.5rem;
+    
+    @include m.medium {
+      padding: 2rem 2.5rem;
+    }
+    
+    @include m.desktop {
+      padding: 2rem 10%;
+    }
+  }
+
+  &_loading-content,
+  &_error-content {
+    text-align: center;
+  }
+
+  &_error-content {
+    color: f.color('primary');
+    
+    button {
+      margin-top: 1rem;
+    }
+  }
+
+  &_error-button {
+    background-color: f.color('primary');
+    border: none;
+    color: f.color('white');
+    cursor: pointer;
+    font-size: f.get-font-size('small');
+    font-weight: f.get-font-weight('bold');
+    letter-spacing: 1px;
+    padding: 1rem 2rem;
+    text-transform: uppercase;
+    transition: background-color 0.2s ease;
+    
+    &:hover {
+      background-color: f.color('secondary');
+    }
+  }
+  
   &_header {
     background-color: f.color('black');
     padding: 2rem 1.5rem;
