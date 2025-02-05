@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, Observable, timer } from 'rxjs';
 import { CartItem, CartState } from '../interfaces/cart.interface';
 import { Router } from '@angular/router';
 
@@ -8,6 +8,7 @@ import { Router } from '@angular/router';
 })
 export class CartService {
   private readonly CART_STORAGE_KEY = 'cartState';
+  private readonly CART_VISIBILITY_DURATION = 1000;
 
   private initialState: CartState = {
     items: [],
@@ -15,6 +16,7 @@ export class CartService {
   };
 
   private cartState = new BehaviorSubject<CartState>(this.loadCartState());
+  private temporaryVisibilityTimer: any;
 
   constructor(private router: Router) {
     this.cartState.subscribe((state) => {
@@ -36,11 +38,43 @@ export class CartService {
   }
 
   toggleCart(): void {
+    // Clear any existing timer
+    if (this.temporaryVisibilityTimer) {
+      clearTimeout(this.temporaryVisibilityTimer);
+      this.temporaryVisibilityTimer = null;
+    }
+
     const currentState = this.cartState.getValue();
     this.cartState.next({
       ...currentState,
       isVisible: !currentState.isVisible,
     });
+  }
+
+  private showCartTemporarily(): void {
+    // Clear any existing timer
+    if (this.temporaryVisibilityTimer) {
+      clearTimeout(this.temporaryVisibilityTimer);
+    }
+
+    // Show the cart
+    const currentState = this.cartState.getValue();
+    if (!currentState.isVisible) {
+      this.cartState.next({
+        ...currentState,
+        isVisible: true,
+      });
+    }
+
+    // Set timer to hide the cart
+    this.temporaryVisibilityTimer = setTimeout(() => {
+      const state = this.cartState.getValue();
+      this.cartState.next({
+        ...state,
+        isVisible: false,
+      });
+      this.temporaryVisibilityTimer = null;
+    }, this.CART_VISIBILITY_DURATION);
   }
 
   addToCart(
@@ -80,8 +114,12 @@ export class CartService {
         items: [...currentState.items, newItem],
       });
     }
+
+    // Show cart temporarily after adding item
+    this.showCartTemporarily();
   }
 
+  // Rest of the service methods remain unchanged
   updateQuantity(productId: string, newQuantity: number): void {
     const currentState = this.cartState.getValue();
 
