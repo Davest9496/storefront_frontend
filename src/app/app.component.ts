@@ -23,6 +23,7 @@ export class AppComponent {
       .pipe(filter((event) => event instanceof NavigationEnd))
       .subscribe((event: NavigationEnd) => {
         this.showBestGear = !event.url.includes('/checkout');
+        this.showBestGear = this.showBestGear && !event.url.includes('/auth');
       });
   }
 }

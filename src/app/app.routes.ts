@@ -39,6 +39,10 @@ export const routes: Routes = [
       ),
   },
   {
+    path: 'auth',
+    loadChildren: () => import('./pages/auth/auth.routes').then(m => m.AUTH_ROUTES)
+  },
+  {
     path: '**',
     loadComponent: () =>
       import('./pages/not-found/not-found').then((m) => m.NotFoundComponent),
