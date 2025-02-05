@@ -1,44 +1,41 @@
 <section class="product">
-    <!-- ZX9 Speaker -->
-    <div class="product_featured">
-        <div class="product_featured-image">
-            <img [src]="products[0].pattern" alt="" class="product_pattern">
-            <picture>
-                <source [srcset]="products[0].image.desktop" media="(min-width: 1200px)">
-                <source [srcset]="products[0].image.tablet" media="(min-width: 768px)">
-                <img [src]="products[0].image.mobile" [alt]="products[0].name" class="product_img">
-            </picture>
-        </div>
-        <div class="product_content">
-            <h2>{{products[0].name}}</h2>
-            <p>{{products[0].description}}</p>
-            <app-button variant="dark" [routerLink]="['/product', products[0].id]">SEE PRODUCT</app-button>
-        </div>
-    </div>
-
-    <!-- ZX7 Speaker -->
-    <div class="product_secondary">
+  <div *ngFor="let product of products" [class]="product.class">
+    <ng-container *ngIf="product.class === 'product_featured'; else standardProduct">
+      <div class="product_featured-image">
+        <img [src]="product.pattern" alt="" class="product_pattern">
         <picture>
-            <source [srcset]="products[1].image.desktop" media="(min-width: 1200px)">
-            <source [srcset]="products[1].image.tablet" media="(min-width: 768px)">
-            <img [src]="products[1].image.mobile" [alt]="products[1].name" class="product_img">
+          <source [srcset]="product.image.desktop" media="(min-width: 1200px)">
+          <source [srcset]="product.image.tablet" media="(min-width: 768px)">
+          <img [src]="product.image.mobile" [alt]="product.name" class="product_img">
         </picture>
-        <div class="product_content">
-            <h2>{{products[1].name}}</h2>
-            <app-button variant="outline" [routerLink]="['/product', products[0].id]">SEE PRODUCT</app-button>
-        </div>
-    </div>
+      </div>
+      <div class="product_content">
+        <h2>{{ product.name }}</h2>
+        <p>{{ product.description }}</p>
+        <app-button 
+          variant="dark" 
+          [routerLink]="['/product', product.id]"
+        >
+          SEE PRODUCT
+        </app-button>
+      </div>
+    </ng-container>
 
-    <!-- YX1 Earphones -->
-    <div class="product_tertiary">
-        <picture>
-            <source [srcset]="products[2].image.desktop" media="(min-width: 1200px)">
-            <source [srcset]="products[2].image.tablet" media="(min-width: 768px)">
-            <img [src]="products[2].image.mobile" [alt]="products[2].name" class="product_img">
-        </picture>
-        <div class="product_content">
-            <h2>{{products[2].name}}</h2>
-            <app-button variant="outline" [routerLink]="['/product', products[0].id]">SEE PRODUCT</app-button>
-        </div>
-    </div>
+    <ng-template #standardProduct>
+      <picture>
+        <source [srcset]="product.image.desktop" media="(min-width: 1200px)">
+        <source [srcset]="product.image.tablet" media="(min-width: 768px)">
+        <img [src]="product.image.mobile" [alt]="product.name" class="product_img">
+      </picture>
+      <div class="product_content">
+        <h2>{{ product.name }}</h2>
+        <app-button 
+          variant="outline" 
+          [routerLink]="['/product', product.id]"
+        >
+          SEE PRODUCT
+        </app-button>
+      </div>
+    </ng-template>
+  </div>
 </section>
