@@ -16,9 +16,12 @@ interface FormData {
   eMoneyPin: string;
 }
 
-type ErrorFields = {
-  [K in keyof FormData]?: boolean;
-};
+interface ErrorFields {
+  [key: string]: {
+    hasError: boolean;
+    touched: boolean;
+  };
+}
 
 @Component({
   selector: 'app-checkout-form',
@@ -46,8 +49,10 @@ export class CheckoutFormComponent implements OnInit {
   };
 
   patterns = {
+    email: /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/,
+    name: /^[A-Za-z]+ [A-Za-z]+$/,
     phone:
-      /^(?:(?:\+44\s?|0)(?:(?:(?:\d{2}\s?\d{4}\s?\d{4})|(?:\d{3}\s?\d{3}\s?\d{4})|(?:\d{4}\s?\d{6}))))$/,
+      /^(?:(?:\+44\s?|0)(?:\d{2}\s?\d{4}\s?\d{4}|\d{3}\s?\d{3}\s?\d{4}|\d{4}\s?\d{6}))$/,
     postcode: /^[A-Z]{1,2}[0-9][A-Z0-9]? ?[0-9][A-Z]{2}$/i,
     eMoneyNumber: /^\d{9}$/,
     eMoneyPin: /^\d{4}$/,
@@ -60,22 +65,32 @@ export class CheckoutFormComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    // Initialize error states
+    Object.keys(this.formData).forEach((field) => {
+      this.errors[field] = {
+        hasError: false,
+        touched: false,
+      };
+    });
     this.validateForm();
   }
 
-  // Separate method for handling payment method changes
+  // Handle field focus
+  onFieldFocus(field: string): void {
+    this.errors[field].touched = true;
+  }
+
   onPaymentMethodChange(value: 'e-Money' | 'cash') {
     this.formData.paymentMethod = value;
     if (!this.showEMoneyFields) {
       this.formData.eMoneyNumber = '';
       this.formData.eMoneyPin = '';
-      delete this.errors['eMoneyNumber'];
-      delete this.errors['eMoneyPin'];
+      this.errors['eMoneyNumber'].hasError = false;
+      this.errors['eMoneyPin'].hasError = false;
     }
     this.validateForm();
   }
 
-  // Type-safe method for handling string inputs
   onStringInputChange(
     field: Exclude<keyof FormData, 'paymentMethod'>,
     value: string
@@ -88,53 +103,39 @@ export class CheckoutFormComponent implements OnInit {
 
   validateField(field: keyof FormData) {
     const value = this.formData[field];
-    this.errors[field] = false;
 
     switch (field) {
       case 'name':
-        if (!value || value.length < 2) {
-          this.errors[field] = true;
-        }
+        this.errors[field].hasError = !value || !this.patterns.name.test(value);
         break;
       case 'email':
-        if (!value || !value.includes('@')) {
-          this.errors[field] = true;
-        }
+        this.errors[field].hasError =
+          !value || !this.patterns.email.test(value);
         break;
       case 'phone':
-        if (!value || !this.patterns.phone.test(value)) {
-          this.errors[field] = true;
-        }
+        this.errors[field].hasError =
+          !value || !this.patterns.phone.test(value);
         break;
       case 'addressLine1':
-        if (!value || value.length < 5) {
-          this.errors[field] = true;
-        }
+        this.errors[field].hasError = !value || value.length < 5;
         break;
       case 'city':
-        if (!value) {
-          this.errors[field] = true;
-        }
+        this.errors[field].hasError = !value;
         break;
       case 'postcode':
-        if (!value || !this.patterns.postcode.test(value)) {
-          this.errors[field] = true;
-        }
+        this.errors[field].hasError =
+          !value || !this.patterns.postcode.test(value);
         break;
       case 'eMoneyNumber':
-        if (
-          this.showEMoneyFields &&
-          (!value || !this.patterns.eMoneyNumber.test(value))
-        ) {
-          this.errors[field] = true;
+        if (this.showEMoneyFields) {
+          this.errors[field].hasError =
+            !value || !this.patterns.eMoneyNumber.test(value);
         }
         break;
       case 'eMoneyPin':
-        if (
-          this.showEMoneyFields &&
-          (!value || !this.patterns.eMoneyPin.test(value))
-        ) {
-          this.errors[field] = true;
+        if (this.showEMoneyFields) {
+          this.errors[field].hasError =
+            !value || !this.patterns.eMoneyPin.test(value);
         }
         break;
     }
@@ -145,7 +146,7 @@ export class CheckoutFormComponent implements OnInit {
       this.validateField(field);
     });
 
-    const isValid = !Object.values(this.errors).some((error) => error);
+    const isValid = !Object.values(this.errors).some((error) => error.hasError);
 
     this.formStatusChange.emit(isValid);
     if (isValid) {
