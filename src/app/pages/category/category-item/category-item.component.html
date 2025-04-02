@@ -2,21 +2,22 @@
   <picture class="category-item_image">
     <!-- Desktop image -->
     <source 
-      [srcset]="getImageUrl(item.images?.desktop)" 
+      [srcset]="desktopSrc" 
       media="(min-width: 1200px)"
       *ngIf="item.images?.desktop"
     >
     <!-- Tablet image -->
     <source 
-      [srcset]="getImageUrl(item.images?.tablet)" 
+      [srcset]="tabletSrc" 
       media="(min-width: 768px)"
       *ngIf="item.images?.tablet"
     >
     <!-- Mobile image (default) -->
     <img 
-      [src]="getImageUrl(item.images?.mobile)" 
+      [src]="mobileSrc" 
       [alt]="item.name"
       class="category-item_img"
+      (error)="handleImageError($event)"
     >
     <span *ngIf="item.isNew" class="category-item_new">NEW PRODUCT</span>
   </picture>

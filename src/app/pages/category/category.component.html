@@ -25,7 +25,7 @@
   </div>
 
   <div class="category_grid">
-    @for (item of category.items; track trackById) {
+    @for (item of category.items; track trackByIdAndIndex($index, item)) {
       <app-category-item [item]="item" />
     }
     

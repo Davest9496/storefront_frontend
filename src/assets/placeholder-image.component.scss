@@ -1,0 +1,23 @@
+// /* 
+//    Create a blank placeholder image using SCSS
+//    This can be used in your project by adding this SCSS file
+// */
+
+// .placeholder-image {
+//   width: 100%;
+//   height: 0;
+//   padding-bottom: 75%; /* 4:3 aspect ratio */
+//   background-color: #e5e5e5;
+//   position: relative;
+//   display: flex;
+//   align-items: center;
+//   justify-content: center;
+//   overflow: hidden;
+  
+//   &::after {
+//     content: 'No Image Available';
+//     position: absolute;
+//     color: #999;
+//     font-size: 1rem;
+//   }
+// }

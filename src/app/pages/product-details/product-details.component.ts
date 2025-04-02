@@ -6,6 +6,7 @@ import { PopularProductsComponent } from '@app/components/popular-products/popul
 import { Product } from '@app/interfaces/product.interface';
 import { CategoryService } from '../../services/category.service';
 import { ProductService, AppProduct } from '../../services/product.service';
+import { AssetService } from '../../services/asset.service';
 import { filter, Subscription, switchMap, tap, of } from 'rxjs';
 import { CartService } from '@app/services/cart.service';
 
@@ -21,6 +22,15 @@ export class ProductDetailsComponent implements OnInit, OnDestroy {
   quantity: number = 1;
   loading = false;
   error = '';
+
+  // Use the existing SVG file
+  placeholderImagePath = '/assets/placeholder-image.svg';
+
+  // Image URLs
+  mobileSrc = this.placeholderImagePath;
+  tabletSrc = this.placeholderImagePath;
+  desktopSrc = this.placeholderImagePath;
+
   private routeSubscription?: Subscription;
   private productSubscription?: Subscription;
 
@@ -30,6 +40,7 @@ export class ProductDetailsComponent implements OnInit, OnDestroy {
     private categoryService: CategoryService,
     private productService: ProductService,
     private cartService: CartService,
+    private assetService: AssetService,
   ) {
     // Subscribe to route changes while on the same component
     this.routeSubscription = this.router.events
@@ -65,6 +76,7 @@ export class ProductDetailsComponent implements OnInit, OnDestroy {
         next: (product) => {
           if (product) {
             this.product = product;
+            this.processProductImages();
             this.loading = false;
           } else {
             this.router.navigate(['/not-found']);
@@ -78,74 +90,62 @@ export class ProductDetailsComponent implements OnInit, OnDestroy {
       });
   }
 
-  // Fallback method to find product in categories if needed
-  private findProductInCategories(productId: string): void {
-    this.loading = true;
-    this.error = '';
+  // Process product images to get correct URLs
+  private processProductImages(): void {
+    if (this.product?.images) {
+      if (this.product.images.mobile) {
+        this.mobileSrc = this.assetService.getAssetUrl(
+          this.product.images.mobile,
+        );
+      }
 
-    this.productSubscription = this.categoryService
-      .getCategories()
-      .pipe(
-        tap((categories) => {
-          let found = false;
-          for (const category of categories) {
-            // Check if items exist before trying to find product
-            if (category.items && category.items.length > 0) {
-              const product = category.items.find(
-                (item) => item.id === productId,
-              );
-              if (product) {
-                this.product = {
-                  ...product,
-                  category: category.name.toLowerCase(),
-                  price: product.price || 0,
-                } as Product;
-                found = true;
-                break;
-              }
-            }
-          }
-          if (!found) {
-            this.router.navigate(['/not-found']);
-          }
-        }),
-      )
-      .subscribe({
-        next: () => {
-          this.loading = false;
-        },
-        error: (err) => {
-          this.error = 'Failed to load product details';
-          this.loading = false;
-          console.error('Error loading product:', err);
-        },
-      });
+      if (this.product.images.tablet) {
+        this.tabletSrc = this.assetService.getAssetUrl(
+          this.product.images.tablet,
+        );
+      }
+
+      if (this.product.images.desktop) {
+        this.desktopSrc = this.assetService.getAssetUrl(
+          this.product.images.desktop,
+        );
+      }
+    }
   }
 
   // Helper method to get the correct image URL
   getImageUrl(path: string): string {
-    // Check if the path is already an absolute URL (like an S3 URL)
-    if (path.startsWith('http://') || path.startsWith('https://')) {
-      return path;
-    }
-
-    // Check if the path already includes the assets directory
-    if (path.startsWith('assets/')) {
-      return path;
-    }
-
-    // Otherwise, prepend the assets path
-    return `assets/${path}`;
+    return this.assetService.getAssetUrl(path);
   }
 
   getImagePath(
     imageNumber: number,
     size: 'mobile' | 'tablet' | 'desktop',
   ): string {
-    if (!this.product || !this.product.category) return '';
-    return `/assets/product-${
-      this.product.id
-    }-${this.product.category.toLowerCase()}/${size}/image-gallery-${imageNumber}.jpg`;
+    if (!this.product || !this.product.category)
+      return this.placeholderImagePath;
+
+    try {
+      const path = `product-${
+        this.product.id
+      }-${this.product.category.toLowerCase()}/${size}/image-gallery-${imageNumber}.jpg`;
+
+      return this.assetService.getAssetUrl(path);
+    } catch (err) {
+      console.error('Error generating image path:', err);
+      return this.placeholderImagePath;
+    }
+  }
+
+  // Handle image error events safely
+  handleImageError(event: Event): void {
+    const imgElement = event.target as HTMLImageElement;
+    if (imgElement && imgElement instanceof HTMLImageElement) {
+      // Prevent infinite loop by checking if we're already using the placeholder
+      if (imgElement.src !== this.placeholderImagePath) {
+        imgElement.src = this.placeholderImagePath;
+      }
+    }
   }
 
   incrementQuantity(): void {
@@ -159,14 +159,20 @@ export class ProductDetailsComponent implements OnInit, OnDestroy {
   }
 
   addToCart(): void {
-    if (this.product && this.quantity > 0 && this.product.images?.mobile) {
+    if (this.product && this.quantity > 0) {
+      // Use the asset service to get the correct image URL for the cart
+      const imageSrc =
+        this.product.images && this.product.images.mobile
+          ? this.assetService.getAssetUrl(this.product.images.mobile)
+          : this.placeholderImagePath;
+
       this.cartService.addToCart(
         this.product.id,
         this.product.category || '',
         this.product.name,
         this.product.price || 0,
         this.quantity,
-        this.product.images.mobile,
+        imageSrc,
       );
       this.quantity = 1;
     }

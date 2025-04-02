@@ -91,6 +91,20 @@ export class CategoryComponent implements OnInit, OnDestroy {
                 },
               })),
             };
+
+            // Log the items to check for duplicate IDs
+            if (this.category.items) {
+              const itemIds = this.category.items.map((item) => item.id);
+              const uniqueIds = new Set(itemIds);
+
+              if (itemIds.length !== uniqueIds.size) {
+                console.warn(
+                  'Duplicate IDs detected in category items:',
+                  itemIds.filter((id, index) => itemIds.indexOf(id) !== index),
+                );
+              }
+            }
+
             this.products = products;
             this.loading = false;
           } else {
@@ -152,7 +166,8 @@ export class CategoryComponent implements OnInit, OnDestroy {
     return name.charAt(0).toUpperCase() + name.slice(1);
   }
 
-  trackById(_: number, item: any): string {
-    return item.id;
+  // Updated tracking function that creates a truly unique identifier
+  trackByIdAndIndex(index: number, item: any): string {
+    return `${item.id}_${index}`;
   }
 }
