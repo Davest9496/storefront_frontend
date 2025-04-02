@@ -1,20 +1,20 @@
-<!-- src/app/pages/category/category-item/category-item.component.html -->
-
 <article class="category-item">
   <picture class="category-item_image">
     <!-- Desktop image -->
     <source 
-      [srcset]="item.images.desktop" 
+      [srcset]="getImageUrl(item.images?.desktop)" 
       media="(min-width: 1200px)"
+      *ngIf="item.images?.desktop"
     >
     <!-- Tablet image -->
     <source 
-      [srcset]="item.images.tablet" 
+      [srcset]="getImageUrl(item.images?.tablet)" 
       media="(min-width: 768px)"
+      *ngIf="item.images?.tablet"
     >
     <!-- Mobile image (default) -->
     <img 
-      [src]="item.images.mobile" 
+      [src]="getImageUrl(item.images?.mobile)" 
       [alt]="item.name"
       class="category-item_img"
     >

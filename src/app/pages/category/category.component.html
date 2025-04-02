@@ -28,6 +28,11 @@
     @for (item of category.items; track trackById) {
       <app-category-item [item]="item" />
     }
+    
+    <!-- Show message if no items are available -->
+    <div *ngIf="!category.items || category.items.length === 0" class="category_empty">
+      <p>No products available in this category.</p>
+    </div>
   </div>
 </section>
 
@@ -42,3 +47,13 @@
     Return to Home
   </button>
 </section>
+
+<!-- Debug information (only in development) -->
+<div *ngIf="!environment.production" class="debug-info" style="margin: 20px; padding: 15px; border: 1px solid #ccc; border-radius: 5px; background-color: #f9f9f9;">
+  <details>
+    <summary style="font-weight: bold; cursor: pointer;">Debug Information</summary>
+    <div style="margin-top: 10px; padding: 10px; background-color: #f0f0f0; border-radius: 4px; max-height: 300px; overflow: auto;">
+      <pre style="margin: 0;">{{ debugInfo | json }}</pre>
+    </div>
+  </details>
+</div>

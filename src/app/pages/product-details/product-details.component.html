@@ -22,15 +22,15 @@
   <div class="product_header">
     <picture class="product_image">
       <source 
-        [srcset]="product.images.desktop" 
+        [srcset]="getImageUrl(product.images.desktop)" 
         media="(min-width: 1200px)"
       >
       <source 
-        [srcset]="product.images.tablet" 
+        [srcset]="getImageUrl(product.images.tablet)" 
         media="(min-width: 768px)"
       >
       <img 
-        [src]="product.images.mobile" 
+        [src]="getImageUrl(product.images.mobile)" 
         [alt]="product.name"
       >
     </picture>
@@ -39,7 +39,7 @@
       <span class="product_new" *ngIf="product.isNew">NEW PRODUCT</span>
       <h1 class="product_name">{{ product.name }}</h1>
       <p class="product_description">{{ product.description }}</p>
-      <p class="product_price">£ {{ product.price.toLocaleString() }}</p>
+      <p class="product_price">£ {{ (product.price || 0).toLocaleString() }}</p>
 
       <!-- Add to Cart Section -->
       <div class="product_cart">
@@ -63,7 +63,7 @@
     </div>
 
     <!-- In The Box Section -->
-    <div class="product_box">
+    <div class="product_box" *ngIf="product.includes && product.includes.length > 0">
       <h2 class="product_box-title">IN THE BOX</h2>
       <ul class="product_items">
         <li *ngFor="let item of product.includes">

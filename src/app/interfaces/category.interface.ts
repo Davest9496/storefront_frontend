@@ -1,21 +1,19 @@
-import { BoxItem } from './product.interface';
+export interface Category {
+  name: string;
+  items?: CategoryItem[];
+}
 
 export interface CategoryItem {
   id: string;
   name: string;
   description: string;
   price: number;
-  isNew: boolean;
-  features: string[];
-  includes: BoxItem[];
-  images: {
+  features?: string[];
+  includes?: { quantity: number; item: string }[];
+  isNew?: boolean;
+  images?: {
     mobile: string;
     tablet: string;
     desktop: string;
   };
-}
-
-export interface Category {
-  name: string;
-  items: CategoryItem[];
 }

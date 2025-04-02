@@ -5,7 +5,8 @@ import { MenuComponent } from '@app/components/menu/menu.component';
 import { PopularProductsComponent } from '@app/components/popular-products/popular-products.component';
 import { Product } from '@app/interfaces/product.interface';
 import { CategoryService } from '../../services/category.service';
-import { filter, Subscription, switchMap, tap } from 'rxjs';
+import { ProductService, AppProduct } from '../../services/product.service';
+import { filter, Subscription, switchMap, tap, of } from 'rxjs';
 import { CartService } from '@app/services/cart.service';
 
 @Component({
@@ -27,7 +28,8 @@ export class ProductDetailsComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private router: Router,
     private categoryService: CategoryService,
-    private cartService: CartService
+    private productService: ProductService,
+    private cartService: CartService,
   ) {
     // Subscribe to route changes while on the same component
     this.routeSubscription = this.router.events
@@ -35,15 +37,15 @@ export class ProductDetailsComponent implements OnInit, OnDestroy {
         filter((event) => event instanceof NavigationEnd),
         tap(() => {
           const productId = this.route.snapshot.params['id'];
-          this.findProduct(productId);
-        })
+          this.loadProduct(productId);
+        }),
       )
       .subscribe();
   }
 
   ngOnInit(): void {
     const productId = this.route.snapshot.params['id'];
-    this.findProduct(productId);
+    this.loadProduct(productId);
   }
 
   ngOnDestroy(): void {
@@ -52,7 +54,32 @@ export class ProductDetailsComponent implements OnInit, OnDestroy {
     this.productSubscription?.unsubscribe();
   }
 
-  private findProduct(productId: string): void {
+  private loadProduct(productId: string): void {
+    this.loading = true;
+    this.error = '';
+
+    // Use the ProductService's mapping method to get product by ID
+    this.productSubscription = this.productService
+      .getProductByIdAsAppProduct(productId)
+      .subscribe({
+        next: (product) => {
+          if (product) {
+            this.product = product;
+            this.loading = false;
+          } else {
+            this.router.navigate(['/not-found']);
+          }
+        },
+        error: (err) => {
+          this.error = 'Failed to load product details';
+          this.loading = false;
+          console.error('Error loading product:', err);
+        },
+      });
+  }
+
+  // Fallback method to find product in categories if needed
+  private findProductInCategories(productId: string): void {
     this.loading = true;
     this.error = '';
 
@@ -62,23 +89,26 @@ export class ProductDetailsComponent implements OnInit, OnDestroy {
         tap((categories) => {
           let found = false;
           for (const category of categories) {
-            const product = category.items.find(
-              (item) => item.id === productId
-            );
-            if (product) {
-              this.product = {
-                ...product,
-                category: category.name.toLowerCase(),
-                price: product.price || 0,
-              } as Product;
-              found = true;
-              break;
+            // Check if items exist before trying to find product
+            if (category.items && category.items.length > 0) {
+              const product = category.items.find(
+                (item) => item.id === productId,
+              );
+              if (product) {
+                this.product = {
+                  ...product,
+                  category: category.name.toLowerCase(),
+                  price: product.price || 0,
+                } as Product;
+                found = true;
+                break;
+              }
             }
           }
           if (!found) {
             this.router.navigate(['/not-found']);
           }
-        })
+        }),
       )
       .subscribe({
         next: () => {
@@ -92,11 +122,27 @@ export class ProductDetailsComponent implements OnInit, OnDestroy {
       });
   }
 
+  // Helper method to get the correct image URL
+  getImageUrl(path: string): string {
+    // Check if the path is already an absolute URL (like an S3 URL)
+    if (path.startsWith('http://') || path.startsWith('https://')) {
+      return path;
+    }
+
+    // Check if the path already includes the assets directory
+    if (path.startsWith('assets/')) {
+      return path;
+    }
+
+    // Otherwise, prepend the assets path
+    return `assets/${path}`;
+  }
+
   getImagePath(
     imageNumber: number,
-    size: 'mobile' | 'tablet' | 'desktop'
+    size: 'mobile' | 'tablet' | 'desktop',
   ): string {
-    if (!this.product) return '';
+    if (!this.product || !this.product.category) return '';
     return `/assets/product-${
       this.product.id
     }-${this.product.category.toLowerCase()}/${size}/image-gallery-${imageNumber}.jpg`;
@@ -113,14 +159,14 @@ export class ProductDetailsComponent implements OnInit, OnDestroy {
   }
 
   addToCart(): void {
-    if (this.product && this.quantity > 0) {
+    if (this.product && this.quantity > 0 && this.product.images?.mobile) {
       this.cartService.addToCart(
         this.product.id,
-        this.product.category,
+        this.product.category || '',
         this.product.name,
-        this.product.price,
+        this.product.price || 0,
         this.quantity,
-        this.product.images.mobile
+        this.product.images.mobile,
       );
       this.quantity = 1;
     }

@@ -19,7 +19,7 @@ export const routes: Routes = [
     path: 'product',
     loadChildren: () =>
       import('./pages/product-details/product.routes').then(
-        (m) => m.PRODUCT_ROUTES
+        (m) => m.PRODUCT_ROUTES,
       ),
     canActivate: [ScrollGuard],
   },
@@ -27,7 +27,7 @@ export const routes: Routes = [
     path: 'checkout',
     loadChildren: () =>
       import('./pages/check-out/check-out.routes').then(
-        (m) => m.CHECKOUT_ROUTES
+        (m) => m.CHECKOUT_ROUTES,
       ),
     canActivate: [ScrollGuard],
   },
@@ -35,12 +35,19 @@ export const routes: Routes = [
     path: 'checkout/confirmation',
     loadComponent: () =>
       import('./pages/confirmation/confirmation.component').then(
-        (m) => m.ConfirmationComponent
+        (m) => m.ConfirmationComponent,
       ),
   },
   {
     path: 'auth',
-    loadChildren: () => import('./pages/auth/auth.routes').then(m => m.AUTH_ROUTES)
+    loadChildren: () =>
+      import('./pages/auth/auth.routes').then((m) => m.AUTH_ROUTES),
+  },
+  // Add API test route
+  {
+    path: 'api-test',
+    loadChildren: () =>
+      import('./pages/api-test/api-test.routes').then((m) => m.API_TEST_ROUTES),
   },
   {
     path: '**',

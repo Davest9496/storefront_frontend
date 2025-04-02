@@ -8,7 +8,7 @@ export const PRODUCT_ROUTES: Routes = [
     component: ProductDetailsComponent,
     providers: [CategoryService],
     data: {
-      title: 'Product Details - Earphones, Headphones, Speakers'
-    }
+      title: 'Product Details - Earphones, Headphones, Speakers',
+    },
   },
 ];
