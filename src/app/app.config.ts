@@ -1,6 +1,9 @@
 import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
 import { provideRouter, withComponentInputBinding } from '@angular/router';
-import { provideHttpClient } from '@angular/common/http';
+import {
+  provideHttpClient,
+  withInterceptorsFromDi,
+} from '@angular/common/http';
 import {
   provideClientHydration,
   withEventReplay,
@@ -18,9 +21,8 @@ export const appConfig: ApplicationConfig = {
 
     provideClientHydration(withEventReplay()),
 
-    provideClientHydration(),
-
-    provideHttpClient(),
+    // Enhanced HTTP client with interceptors
+    provideHttpClient(withInterceptorsFromDi()),
 
     ScrollService,
   ],

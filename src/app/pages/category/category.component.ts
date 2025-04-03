@@ -4,8 +4,8 @@ import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { ProductService } from '../../services/product.service';
 import { CategoryService } from '../../services/category.service';
 import { CategoryItemComponent } from './category-item/category-item.component';
-import { Category } from '../../interfaces/category.interface';
-import { Subject, takeUntil, switchMap, of, forkJoin, catchError } from 'rxjs';
+import { Category, CategoryItem } from '../../interfaces/category.interface';
+import { Subject, takeUntil, catchError } from 'rxjs';
 import { environment } from '../../../environments/environment';
 
 @Component({
@@ -75,21 +75,12 @@ export class CategoryComponent implements OnInit, OnDestroy {
           this.debugInfo.products = products;
 
           if (products && products.length > 0) {
-            // Create a synthetic category if we got products
+            // Create a synthetic category with the mapped products
             this.category = {
               name: this.formatCategoryName(categoryName),
-              items: products.map((product) => ({
-                id: product.id,
-                name: product.name,
-                description: product.description || '',
-                price: product.price || 0,
-                isNew: product.isNew || false,
-                images: product.image || {
-                  mobile: '',
-                  tablet: '',
-                  desktop: '',
-                },
-              })),
+              items: products.map((product) =>
+                this.mapProductToCategoryItem(product),
+              ),
             };
 
             // Log the items to check for duplicate IDs
@@ -159,6 +150,22 @@ export class CategoryComponent implements OnInit, OnDestroy {
           this.error = `Failed to load category '${categoryName}'`;
         },
       });
+  }
+
+  // Map a product to a category item
+  private mapProductToCategoryItem(product: any): CategoryItem {
+    return {
+      id: product.id,
+      name: product.name,
+      description: product.description || '',
+      price: product.price || 0,
+      isNew: product.isNew || false,
+      images: product.images || {
+        mobile: '',
+        tablet: '',
+        desktop: '',
+      },
+    };
   }
 
   // Helper to format category name for display (e.g., 'headphones' -> 'Headphones')

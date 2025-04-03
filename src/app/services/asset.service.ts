@@ -5,10 +5,10 @@ import { environment } from '../../environments/environment';
   providedIn: 'root',
 })
 export class AssetService {
-  private assetBaseUrl = environment.assetUrl;
+  private assetBaseUrl = environment.assetUrl || '/assets/';
   private serverApiUrl = environment.apiUrl;
 
-  // Use the existing SVG file
+  // Use the SVG file for placeholders
   private placeholderImagePath = '/assets/placeholder-image.svg';
 
   constructor() {
@@ -24,8 +24,12 @@ export class AssetService {
    */
   getAssetUrl(path: string | undefined): string {
     if (!path) {
+      console.log('No path provided, returning placeholder');
       return this.placeholderImagePath;
     }
+
+    // Log for debugging
+    console.log('AssetService: Processing path:', path);
 
     // If it's a placeholder reference, return the SVG file path
     if (
@@ -47,17 +51,32 @@ export class AssetService {
       return `${serverRoot}/${cleanPath}`;
     }
 
-    // If it's an asset path that already includes the assets directory prefix
-    if (path.startsWith('assets/')) {
-      // In production, replace assets/ with the S3 base URL if needed
-      if (environment.production && this.assetBaseUrl !== '/assets/') {
-        return path.replace('assets/', this.assetBaseUrl);
-      }
-      // In development, just return the path as is (with leading slash)
-      return `/${path}`;
-    }
+    // Decide whether to use local assets or connect to the backend for images
+    if (environment.production) {
+      // In production, connect to backend/S3
+      // Strip any leading 'assets/' as the backend wouldn't have that prefix
+      const cleanPath = path.replace(/^assets\//, '');
 
-    // For paths without the assets/ prefix
-    return `${this.assetBaseUrl}${path}`;
+      // Check if it's a product image path
+      if (
+        path.includes('/mobile/') ||
+        path.includes('/tablet/') ||
+        path.includes('/desktop/')
+      ) {
+        console.log('Product image identified:', path);
+        return `${this.serverApiUrl}/uploads/${cleanPath}`;
+      }
+
+      // Default product image handling
+      return `${this.serverApiUrl}/uploads/${cleanPath}`;
+    } else {
+      // In development, use local assets or the specified asset URL
+      if (path.startsWith('assets/')) {
+        return `/${path}`;
+      }
+
+      // For product images, construct the proper path for local assets
+      return `/assets/${path}`;
+    }
   }
 }
