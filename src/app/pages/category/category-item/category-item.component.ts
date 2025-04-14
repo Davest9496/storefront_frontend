@@ -29,23 +29,29 @@ export class CategoryItemComponent implements OnInit {
   ngOnInit(): void {
     // Process image paths when component initializes
     this.processImagePaths();
+    console.log('CategoryItem initialized with item:', this.item);
   }
 
   // Process all image paths to ensure they're valid
   private processImagePaths(): void {
+    console.log('Processing image paths for item:', this.item);
+
     if (this.item.images) {
       if (this.item.images.mobile) {
         this.mobileSrc = this.assetService.getAssetUrl(this.item.images.mobile);
+        console.log('Mobile src:', this.mobileSrc);
       }
 
       if (this.item.images.tablet) {
         this.tabletSrc = this.assetService.getAssetUrl(this.item.images.tablet);
+        console.log('Tablet src:', this.tabletSrc);
       }
 
       if (this.item.images.desktop) {
         this.desktopSrc = this.assetService.getAssetUrl(
           this.item.images.desktop,
         );
+        console.log('Desktop src:', this.desktopSrc);
       }
     } else {
       console.warn('Item has no images:', this.item);
@@ -56,6 +62,7 @@ export class CategoryItemComponent implements OnInit {
   handleImageError(event: Event): void {
     const imgElement = event.target as HTMLImageElement;
     if (imgElement && imgElement instanceof HTMLImageElement) {
+      console.warn('Image failed to load:', imgElement.src);
       // Prevent infinite loop by checking if we're already using the placeholder
       if (imgElement.src !== this.placeholderImagePath) {
         imgElement.src = this.placeholderImagePath;
@@ -64,6 +71,7 @@ export class CategoryItemComponent implements OnInit {
   }
 
   navigateToProduct(): void {
+    console.log('Navigating to product with ID:', this.item.id);
     this.router.navigate(['/product', this.item.id]);
   }
 }

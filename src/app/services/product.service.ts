@@ -4,17 +4,28 @@ import { Observable, catchError, of, map, tap } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { Product as AppProduct } from '../interfaces/product.interface';
 
-// Define the API Product interface based on your backend structure
+// Define the API Product interface based on the actual JSON response structure
 export interface ApiProduct {
   id: string;
-  product_name: string;
-  product_desc?: string;
+  productName: string;
+  productDesc?: string;
   price?: string;
-  product_features?: string[];
-  product_accessories?: string[];
   category?: string;
-  image_name?: string;
-  // Add any other fields from your API
+  imageName?: string;
+  productFeatures?: string[];
+  productAccessories?: string[];
+  isNew?: boolean;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+// Define the API response wrapper structure
+export interface ApiResponse {
+  status: string;
+  results?: number;
+  data: {
+    products: ApiProduct[];
+  };
 }
 
 // Re-export the app's Product interface for clarity
@@ -26,15 +37,27 @@ export { AppProduct };
 export class ProductService {
   private apiUrl = `${environment.apiUrl}/products`;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) {
+    console.log('ProductService initialized with API URL:', this.apiUrl);
+  }
 
   // Get all products
   getProducts(): Observable<AppProduct[]> {
     console.log('ProductService: Getting all products from', this.apiUrl);
 
-    return this.http.get<ApiProduct[]>(this.apiUrl).pipe(
-      tap((response) => console.log('Products response:', response)),
-      map((products) => products.map((p) => this.mapToAppProduct(p))),
+    return this.http.get<ApiResponse>(this.apiUrl).pipe(
+      tap((response) => console.log('Raw products response:', response)),
+      map((response) => {
+        // Handle the nested response structure
+        if (
+          response.status === 'success' &&
+          response.data &&
+          Array.isArray(response.data.products)
+        ) {
+          return response.data.products.map((p) => this.mapToAppProduct(p));
+        }
+        return [];
+      }),
       catchError((error) => {
         console.error('Error fetching products:', error);
         return of([]);
@@ -48,8 +71,52 @@ export class ProductService {
       `ProductService: Getting product ${id} from ${this.apiUrl}/${id}`,
     );
 
-    return this.http.get<ApiProduct>(`${this.apiUrl}/${id}`).pipe(
-      tap((response) => console.log(`Product ${id} response:`, response)),
+    return this.http.get<any>(`${this.apiUrl}/${id}`).pipe(
+      tap((response) => console.log(`Raw product ${id} response:`, response)),
+      map((response) => {
+        // Handle different response formats
+
+        // Case 1: Direct product object with id field
+        if (response && response.id === id) {
+          console.log(`Product ${id} found in direct response`);
+          return response;
+        }
+
+        // Case 2: Nested in data.products array
+        if (response?.status === 'success' && response?.data?.products) {
+          const products = response.data.products;
+          if (Array.isArray(products) && products.length > 0) {
+            const product = products.find((p) => p.id === id);
+            if (product) {
+              console.log(`Product ${id} found in data.products array`);
+              return product;
+            }
+          }
+        }
+
+        // Case 3: Nested in data.product (single product) - THIS IS YOUR CASE
+        if (
+          response?.status === 'success' &&
+          response?.data?.product &&
+          response.data.product.id === id
+        ) {
+          console.log(`Product ${id} found in data.product object`);
+          return response.data.product;
+        }
+
+        // Case 4: Nested in data object directly
+        if (
+          response?.status === 'success' &&
+          response?.data &&
+          response.data.id === id
+        ) {
+          console.log(`Product ${id} found in data object`);
+          return response.data;
+        }
+
+        console.warn(`Product ${id} not found in response`);
+        return undefined;
+      }),
       catchError((error) => {
         console.error(`Error fetching product ${id}:`, error);
         return of(undefined);
@@ -60,55 +127,51 @@ export class ProductService {
   // Get a specific product by ID mapped to the app's Product interface
   getProductByIdAsAppProduct(id: string): Observable<AppProduct | undefined> {
     return this.getProductById(id).pipe(
+      tap((product) => console.log(`Product ${id} before mapping:`, product)),
       map((product) => {
-        if (!product) return undefined;
+        if (!product) {
+          console.warn(`No product found for ID ${id}`);
+          return undefined;
+        }
 
-        return this.mapToAppProduct(product);
+        const mappedProduct = this.mapToAppProduct(product);
+        console.log(`Product ${id} after mapping:`, mappedProduct);
+        return mappedProduct;
       }),
     );
   }
 
-  // Search products with query parameters
-  searchProducts(
-    query: string,
-    filters?: Record<string, any>,
-  ): Observable<AppProduct[]> {
-    console.log(`ProductService: Searching products with query '${query}'`);
+  // Get featured products
+  getFeaturedProducts(): Observable<AppProduct[]> {
+    console.log('ProductService: Getting featured products');
 
-    let params = new HttpParams().set('q', query);
-
-    if (filters) {
-      Object.keys(filters).forEach((key) => {
-        if (filters[key] !== undefined && filters[key] !== null) {
-          params = params.set(key, filters[key]);
+    return this.http.get<ApiResponse>(`${this.apiUrl}/featured`).pipe(
+      tap((response) =>
+        console.log('Featured products raw response:', response),
+      ),
+      map((response) => {
+        if (
+          response.status === 'success' &&
+          response.data &&
+          Array.isArray(response.data.products)
+        ) {
+          return response.data.products.map((p) => this.mapToAppProduct(p));
         }
-      });
-    }
-
-    return this.http
-      .get<ApiProduct[]>(`${this.apiUrl}/search`, { params })
-      .pipe(
-        tap((response) => console.log('Search response:', response)),
-        map((products) => products.map((p) => this.mapToAppProduct(p))),
-        catchError((error) => {
-          console.error('Error searching products:', error);
-          return of([]);
-        }),
-      );
-  }
-
-  // Get popular products
-  getPopularProducts(): Observable<AppProduct[]> {
-    console.log('ProductService: Getting popular products');
-
-    return this.http.get<ApiProduct[]>(`${this.apiUrl}/popular`).pipe(
-      tap((response) => console.log('Popular products response:', response)),
-      map((products) => products.map((p) => this.mapToAppProduct(p))),
+        return [];
+      }),
       catchError((error) => {
-        console.error('Error fetching popular products:', error);
+        console.error('Error fetching featured products:', error);
         return of([]);
       }),
     );
+  }
+
+  // Get popular products (alias for featured if API doesn't have a separate popular endpoint)
+  getPopularProducts(): Observable<AppProduct[]> {
+    console.log(
+      'ProductService: Getting popular products (using featured endpoint)',
+    );
+    return this.getFeaturedProducts();
   }
 
   // Get products by category
@@ -121,15 +184,24 @@ export class ProductService {
 
     // Use the correct URL structure to match your server routes
     return this.http
-      .get<ApiProduct[]>(`${this.apiUrl}/category/${normalizedCategory}`)
+      .get<ApiResponse>(`${this.apiUrl}/category/${normalizedCategory}`)
       .pipe(
         tap((response) =>
           console.log(
-            `Products in category '${normalizedCategory}' response:`,
+            `Products in category '${normalizedCategory}' raw response:`,
             response,
           ),
         ),
-        map((products) => products.map((p) => this.mapToAppProduct(p))),
+        map((response) => {
+          if (
+            response.status === 'success' &&
+            response.data &&
+            Array.isArray(response.data.products)
+          ) {
+            return response.data.products.map((p) => this.mapToAppProduct(p));
+          }
+          return [];
+        }),
         catchError((error) => {
           console.error(
             `Error fetching products in category ${normalizedCategory}:`,
@@ -140,34 +212,46 @@ export class ProductService {
       );
   }
 
-  // Create a new product (protected route - requires auth)
-  createProduct(product: ApiProduct): Observable<ApiProduct> {
-    return this.http.post<ApiProduct>(this.apiUrl, product).pipe(
-      catchError((error) => {
-        console.error('Error creating product:', error);
-        throw error;
-      }),
-    );
-  }
+  // Map API Product to App Product
+  mapToAppProduct(product: ApiProduct): AppProduct {
+    // Try to parse accessory JSON strings if they exist
+    const includes = product.productAccessories
+      ? product.productAccessories.map((item) => {
+          try {
+            if (typeof item === 'string') {
+              return JSON.parse(item);
+            } else {
+              return item;
+            }
+          } catch (e) {
+            console.warn('Failed to parse accessory JSON:', item);
+            return { quantity: 1, item: item };
+          }
+        })
+      : [];
 
-  // Update an existing product (protected route - requires auth)
-  updateProduct(id: string, product: ApiProduct): Observable<ApiProduct> {
-    return this.http.put<ApiProduct>(`${this.apiUrl}/${id}`, product).pipe(
-      catchError((error) => {
-        console.error(`Error updating product ${id}:`, error);
-        throw error;
-      }),
-    );
-  }
+    // Generate image paths based on the imageName and category
+    const imageName =
+      product.imageName || `product-${product.id}-${product.category}`;
 
-  // Delete a product (protected route - requires auth)
-  deleteProduct(id: string): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/${id}`).pipe(
-      catchError((error) => {
-        console.error(`Error deleting product ${id}:`, error);
-        throw error;
-      }),
-    );
+    return {
+      id: product.id,
+      name: product.productName,
+      description: product.productDesc || '',
+      price:
+        typeof product.price === 'string'
+          ? parseFloat(product.price || '0')
+          : product.price || 0,
+      category: product.category || '',
+      isNew: product.isNew || false,
+      features: product.productFeatures || [],
+      includes: includes,
+      images: {
+        mobile: `${imageName}/mobile/image-product.jpg`,
+        tablet: `${imageName}/tablet/image-product.jpg`,
+        desktop: `${imageName}/desktop/image-product.jpg`,
+      },
+    };
   }
 
   // Method for handling image uploads to S3
@@ -186,40 +270,5 @@ export class ProductService {
           throw error;
         }),
       );
-  }
-
-  // Map API Product to App Product
-  mapToAppProduct(product: ApiProduct): AppProduct {
-    // Try to parse accessory JSON strings if they exist
-    const includes = product.product_accessories
-      ? product.product_accessories.map((item) => {
-          try {
-            return JSON.parse(item);
-          } catch (e) {
-            console.warn('Failed to parse accessory JSON:', item);
-            return { quantity: 1, item: item };
-          }
-        })
-      : [];
-
-    // Generate image paths based on the image_name and category
-    const imageName =
-      product.image_name || `product-${product.id}-${product.category}`;
-
-    return {
-      id: product.id,
-      name: product.product_name,
-      description: product.product_desc || '',
-      price: parseFloat(product.price || '0'),
-      category: product.category || '',
-      isNew: false, // Set default or add to API if needed
-      features: product.product_features || [],
-      includes: includes,
-      images: {
-        mobile: `${imageName}/mobile/image-product.jpg`,
-        tablet: `${imageName}/tablet/image-product.jpg`,
-        desktop: `${imageName}/desktop/image-product.jpg`,
-      },
-    };
   }
 }

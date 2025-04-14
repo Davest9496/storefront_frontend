@@ -58,8 +58,11 @@
     <!-- Features Section -->
     <div class="product_features">
       <h2>FEATURES</h2>
-      <article *ngFor="let feature of product.features">
-        <p>{{ feature }}</p>
+      <article *ngIf="product.features && product.features.length > 0">
+        <p *ngFor="let feature of product.features">{{ feature }}</p>
+      </article>
+      <article *ngIf="!product.features || product.features.length === 0">
+        <p>No feature information available for this product.</p>
       </article>
     </div>
 
@@ -132,6 +135,16 @@
         >
       </picture>
     </div>
+  </div>
+  
+  <!-- Debug information (only in development) -->
+  <div *ngIf="false" class="debug-info" style="margin: 20px; padding: 15px; border: 1px solid #ccc; border-radius: 5px; background-color: #f9f9f9;">
+    <details>
+      <summary style="font-weight: bold; cursor: pointer;">Debug Information</summary>
+      <div style="margin-top: 10px; padding: 10px; background-color: #f0f0f0; border-radius: 4px; max-height: 300px; overflow: auto;">
+        <pre style="margin: 0;">{{ debugInfo | json }}</pre>
+      </div>
+    </details>
   </div>
 </div>
 

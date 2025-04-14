@@ -22,6 +22,7 @@ export class ProductDetailsComponent implements OnInit, OnDestroy {
   quantity: number = 1;
   loading = false;
   error = '';
+  debugInfo: any = {}; // For debug information
 
   // Use the existing SVG file
   placeholderImagePath = '/assets/placeholder-image.svg';
@@ -56,6 +57,10 @@ export class ProductDetailsComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     const productId = this.route.snapshot.params['id'];
+    console.log(
+      'ProductDetailsComponent initialized with productId:',
+      productId,
+    );
     this.loadProduct(productId);
   }
 
@@ -68,48 +73,69 @@ export class ProductDetailsComponent implements OnInit, OnDestroy {
   private loadProduct(productId: string): void {
     this.loading = true;
     this.error = '';
+    this.debugInfo = { productId };
+
+    console.log(`Loading product details for ID: ${productId}`);
 
     // Use the ProductService's mapping method to get product by ID
     this.productSubscription = this.productService
       .getProductByIdAsAppProduct(productId)
       .subscribe({
         next: (product) => {
+          console.log('Received product data:', product);
+          this.debugInfo.product = product;
+
           if (product) {
             this.product = product;
             this.processProductImages();
             this.loading = false;
           } else {
-            this.router.navigate(['/not-found']);
+            console.error('Product not found:', productId);
+            this.error = `Product not found: ${productId}`;
+            this.loading = false;
+            // Navigate to not-found after a short delay to show the error
+            setTimeout(() => {
+              this.router.navigate(['/not-found']);
+            }, 3000);
           }
         },
         error: (err) => {
-          this.error = 'Failed to load product details';
-          this.loading = false;
           console.error('Error loading product:', err);
+          this.debugInfo.error = err;
+          this.error =
+            'Failed to load product details. Please try again later.';
+          this.loading = false;
         },
       });
   }
 
   // Process product images to get correct URLs
   private processProductImages(): void {
+    console.log('Processing product images:', this.product?.images);
+
     if (this.product?.images) {
       if (this.product.images.mobile) {
         this.mobileSrc = this.assetService.getAssetUrl(
           this.product.images.mobile,
         );
+        console.log('Mobile image URL:', this.mobileSrc);
       }
 
       if (this.product.images.tablet) {
         this.tabletSrc = this.assetService.getAssetUrl(
           this.product.images.tablet,
         );
+        console.log('Tablet image URL:', this.tabletSrc);
       }
 
       if (this.product.images.desktop) {
         this.desktopSrc = this.assetService.getAssetUrl(
           this.product.images.desktop,
         );
+        console.log('Desktop image URL:', this.desktopSrc);
       }
+    } else {
+      console.warn('No product images found');
     }
   }
 
@@ -126,9 +152,13 @@ export class ProductDetailsComponent implements OnInit, OnDestroy {
       return this.placeholderImagePath;
 
     try {
-      const path = `product-${
-        this.product.id
-      }-${this.product.category.toLowerCase()}/${size}/image-gallery-${imageNumber}.jpg`;
+      // Use imageName if available from the API response, or construct it
+      const baseImageName =
+        this.product.images?.desktop?.split('/')[0] ||
+        `product-${this.product.id}-${this.product.category.toLowerCase()}`;
+
+      const path = `${baseImageName}/${size}/image-gallery-${imageNumber}.jpg`;
+      console.log(`Generated gallery image path: ${path}`);
 
       return this.assetService.getAssetUrl(path);
     } catch (err) {
@@ -141,6 +171,8 @@ export class ProductDetailsComponent implements OnInit, OnDestroy {
   handleImageError(event: Event): void {
     const imgElement = event.target as HTMLImageElement;
     if (imgElement && imgElement instanceof HTMLImageElement) {
+      console.warn('Image failed to load:', imgElement.src);
+
       // Prevent infinite loop by checking if we're already using the placeholder
       if (imgElement.src !== this.placeholderImagePath) {
         imgElement.src = this.placeholderImagePath;
