@@ -10,6 +10,7 @@ import {
 } from '@angular/platform-browser';
 import { routes } from './app.routes';
 import { ScrollService } from './services/scroll.service';
+import { API_INTERCEPTORS } from './interceptors';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -23,6 +24,9 @@ export const appConfig: ApplicationConfig = {
 
     // Enhanced HTTP client with interceptors
     provideHttpClient(withInterceptorsFromDi()),
+
+    // Add your API interceptors if needed
+    ...API_INTERCEPTORS,
 
     ScrollService,
   ],
