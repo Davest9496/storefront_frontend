@@ -4,6 +4,7 @@ import { Observable, map, catchError, of, tap } from 'rxjs';
 import { Category, CategoryItem } from '../interfaces/category.interface';
 import { environment } from '../../environments/environment';
 import { ProductService, ApiResponse, ApiProduct } from './product.service';
+import { AssetService } from './asset.service';
 
 @Injectable({
   providedIn: 'root',
@@ -15,6 +16,7 @@ export class CategoryService {
   constructor(
     private http: HttpClient,
     private productService: ProductService,
+    private assetService: AssetService,
   ) {
     console.log('CategoryService initialized with API URL:', this.apiUrl);
   }
@@ -114,9 +116,16 @@ export class CategoryService {
           : product.price || 0,
       isNew: product.isNew || false,
       images: {
-        mobile: `${imageName}/mobile/image-product.jpg`,
-        tablet: `${imageName}/tablet/image-product.jpg`,
-        desktop: `${imageName}/desktop/image-product.jpg`,
+        // Use AssetService to resolve image URLs
+        mobile: this.assetService.getAssetUrl(
+          `${imageName}/mobile/image-product.jpg`,
+        ),
+        tablet: this.assetService.getAssetUrl(
+          `${imageName}/tablet/image-product.jpg`,
+        ),
+        desktop: this.assetService.getAssetUrl(
+          `${imageName}/desktop/image-product.jpg`,
+        ),
       },
     };
   }

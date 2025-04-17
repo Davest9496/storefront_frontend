@@ -3,6 +3,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, catchError, of, map, tap } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { Product as AppProduct } from '../interfaces/product.interface';
+import { AssetService } from './asset.service';
 
 // Define the API Product interface based on the actual JSON response structure
 export interface ApiProduct {
@@ -37,7 +38,10 @@ export { AppProduct };
 export class ProductService {
   private apiUrl = `${environment.apiUrl}/products`;
 
-  constructor(private http: HttpClient) {
+  constructor(
+    private http: HttpClient,
+    private assetService: AssetService,
+  ) {
     console.log('ProductService initialized with API URL:', this.apiUrl);
   }
 
@@ -247,9 +251,16 @@ export class ProductService {
       features: product.productFeatures || [],
       includes: includes,
       images: {
-        mobile: `${imageName}/mobile/image-product.jpg`,
-        tablet: `${imageName}/tablet/image-product.jpg`,
-        desktop: `${imageName}/desktop/image-product.jpg`,
+        // Use AssetService to resolve image URLs
+        mobile: this.assetService.getAssetUrl(
+          `${imageName}/mobile/image-product.jpg`,
+        ),
+        tablet: this.assetService.getAssetUrl(
+          `${imageName}/tablet/image-product.jpg`,
+        ),
+        desktop: this.assetService.getAssetUrl(
+          `${imageName}/desktop/image-product.jpg`,
+        ),
       },
     };
   }

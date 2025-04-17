@@ -22,10 +22,15 @@ export class AssetService {
    * @param path The relative or absolute path to the asset
    * @returns The full URL to the asset
    */
-  getAssetUrl(path: string | undefined): string {
+  getAssetUrl(path: string | undefined, isRetry = false): string {
     if (!path) {
       console.log('No path provided, returning placeholder');
       return this.placeholderImagePath;
+    }
+
+    // Prevent infinite loops
+    if (path === this.placeholderImagePath || isRetry) {
+      return path;
     }
 
     // Log for debugging
@@ -53,7 +58,7 @@ export class AssetService {
 
     // Decide whether to use local assets or connect to the backend for images
     if (environment.production) {
-      // In production, connect to backend/S3
+      // In production, connect to S3
       // Strip any leading 'assets/' as the backend wouldn't have that prefix
       const cleanPath = path.replace(/^assets\//, '');
 
@@ -64,11 +69,11 @@ export class AssetService {
         path.includes('/desktop/')
       ) {
         console.log('Product image identified:', path);
-        return `${this.serverApiUrl}/uploads/${cleanPath}`;
+        return `${this.assetBaseUrl}${cleanPath}`;
       }
 
       // Default product image handling
-      return `${this.serverApiUrl}/uploads/${cleanPath}`;
+      return `${this.assetBaseUrl}${cleanPath}`;
     } else {
       // In development, use local assets or the specified asset URL
       if (path.startsWith('assets/')) {

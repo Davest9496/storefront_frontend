@@ -7,6 +7,7 @@ import { CategoryItemComponent } from './category-item/category-item.component';
 import { Category, CategoryItem } from '../../interfaces/category.interface';
 import { Subject, takeUntil } from 'rxjs';
 import { environment } from '../../../environments/environment';
+import { AssetService } from '../../services/asset.service';
 
 @Component({
   selector: 'app-category',
@@ -29,6 +30,7 @@ export class CategoryComponent implements OnInit, OnDestroy {
     private router: Router,
     private categoryService: CategoryService,
     private productService: ProductService,
+    private assetService: AssetService,
   ) {}
 
   ngOnInit(): void {
@@ -168,9 +170,15 @@ export class CategoryComponent implements OnInit, OnDestroy {
           : product.price || 0,
       isNew: product.isNew || false,
       images: product.images || {
-        mobile: `${imageName}/mobile/image-product.jpg`,
-        tablet: `${imageName}/tablet/image-product.jpg`,
-        desktop: `${imageName}/desktop/image-product.jpg`,
+        mobile: this.assetService.getAssetUrl(
+          `${imageName}/mobile/image-product.jpg`,
+        ),
+        tablet: this.assetService.getAssetUrl(
+          `${imageName}/tablet/image-product.jpg`,
+        ),
+        desktop: this.assetService.getAssetUrl(
+          `${imageName}/desktop/image-product.jpg`,
+        ),
       },
     };
   }
@@ -183,5 +191,23 @@ export class CategoryComponent implements OnInit, OnDestroy {
   // Updated tracking function that creates a truly unique identifier
   trackByIdAndIndex(index: number, item: any): string {
     return `${item.id}_${index}`;
+  }
+
+  // Helper method to get the correct image URL
+  getImageUrl(path: string): string {
+    return this.assetService.getAssetUrl(path);
+  }
+
+  // Handle image error events
+  handleImageError(event: Event): void {
+    const imgElement = event.target as HTMLImageElement;
+    if (imgElement && imgElement instanceof HTMLImageElement) {
+      console.warn('Image failed to load:', imgElement.src);
+
+      // Prevent infinite loop by checking if we're already using the placeholder
+      if (!imgElement.src.includes('placeholder-image.svg')) {
+        imgElement.src = '/assets/placeholder-image.svg';
+      }
+    }
   }
 }
