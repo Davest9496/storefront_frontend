@@ -13,6 +13,8 @@ export class AssetService {
 
   constructor() {
     console.log('AssetService initialized with base URL:', this.assetBaseUrl);
+    console.log('API URL:', this.serverApiUrl);
+    console.log('Using backend images:', environment.useBackendImages || false);
   }
 
   /**
@@ -33,8 +35,10 @@ export class AssetService {
       return path;
     }
 
-    // Log for debugging
-    console.log('AssetService: Processing path:', path);
+    // Debug logging
+    if (environment.debug) {
+      console.log('AssetService: Processing path:', path);
+    }
 
     // If it's a placeholder reference, return the SVG file path
     if (
@@ -57,10 +61,18 @@ export class AssetService {
     }
 
     // Decide whether to use local assets or connect to the backend for images
-    if (environment.production) {
-      // In production, connect to S3
+    if (environment.useBackendImages || environment.production) {
+      // Using backend/S3 for images
       // Strip any leading 'assets/' as the backend wouldn't have that prefix
       const cleanPath = path.replace(/^assets\//, '');
+
+      // Check if it's a gallery image path (contains image-gallery)
+      if (path.includes('image-gallery-')) {
+        if (environment.debug) {
+          console.log('Gallery image identified:', path);
+        }
+        return `${this.assetBaseUrl}${cleanPath}`;
+      }
 
       // Check if it's a product image path
       if (
@@ -68,20 +80,66 @@ export class AssetService {
         path.includes('/tablet/') ||
         path.includes('/desktop/')
       ) {
-        console.log('Product image identified:', path);
+        if (environment.debug) {
+          console.log('Product image identified:', path);
+        }
         return `${this.assetBaseUrl}${cleanPath}`;
       }
 
       // Default product image handling
       return `${this.assetBaseUrl}${cleanPath}`;
     } else {
-      // In development, use local assets or the specified asset URL
+      // Using local assets
+      // If it already has the assets/ prefix, just ensure there's a leading slash
       if (path.startsWith('assets/')) {
         return `/${path}`;
       }
 
       // For product images, construct the proper path for local assets
-      return `/assets/${path}`;
+      // This ensures we always have the /assets/ prefix for local files
+      if (!path.startsWith('/')) {
+        return `/assets/${path}`;
+      } else {
+        return path;
+      }
+    }
+  }
+
+  /**
+   * Gets a gallery image path for a product
+   *
+   * @param productId The product ID
+   * @param category The product category
+   * @param imageNumber The gallery image number (1, 2, 3)
+   * @param size The image size (mobile, tablet, desktop)
+   * @returns The full URL to the gallery image
+   */
+  getGalleryImageUrl(
+    productId: string,
+    category: string | undefined,
+    imageNumber: number,
+    size: 'mobile' | 'tablet' | 'desktop',
+  ): string {
+    if (!productId || !category) {
+      console.warn('Missing product info for gallery image');
+      return this.placeholderImagePath;
+    }
+
+    try {
+      // Construct the base folder name
+      const baseFolder = `product-${productId}-${category.toLowerCase()}`;
+
+      // Construct the path
+      const path = `${baseFolder}/${size}/image-gallery-${imageNumber}.jpg`;
+
+      if (environment.debug) {
+        console.log(`Generated gallery image path: ${path}`);
+      }
+
+      return this.getAssetUrl(path);
+    } catch (error) {
+      console.error('Error generating gallery image path:', error);
+      return this.placeholderImagePath;
     }
   }
 }

@@ -9,6 +9,7 @@ import { ProductService, AppProduct } from '../../services/product.service';
 import { AssetService } from '../../services/asset.service';
 import { filter, Subscription, switchMap, tap, of } from 'rxjs';
 import { CartService } from '@app/services/cart.service';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-product-details',
@@ -114,6 +115,7 @@ export class ProductDetailsComponent implements OnInit, OnDestroy {
     console.log('Processing product images:', this.product?.images);
 
     if (this.product?.images) {
+      // For main product images
       if (this.product.images.mobile) {
         this.mobileSrc = this.assetService.getAssetUrl(
           this.product.images.mobile,
@@ -144,25 +146,26 @@ export class ProductDetailsComponent implements OnInit, OnDestroy {
     return this.assetService.getAssetUrl(path);
   }
 
+  // Use the dedicated gallery image method for gallery images
   getImagePath(
     imageNumber: number,
     size: 'mobile' | 'tablet' | 'desktop',
   ): string {
-    if (!this.product || !this.product.category)
+    if (!this.product || !this.product.category) {
+      console.warn('No product or category available for gallery images');
       return this.placeholderImagePath;
+    }
 
     try {
-      // Use imageName if available from the API response, or construct it
-      const baseImageName =
-        this.product.images?.desktop?.split('/')[0] ||
-        `product-${this.product.id}-${this.product.category.toLowerCase()}`;
-
-      const path = `${baseImageName}/${size}/image-gallery-${imageNumber}.jpg`;
-      console.log(`Generated gallery image path: ${path}`);
-
-      return this.assetService.getAssetUrl(path);
+      // Use the dedicated gallery image method
+      return this.assetService.getGalleryImageUrl(
+        this.product.id,
+        this.product.category,
+        imageNumber,
+        size,
+      );
     } catch (err) {
-      console.error('Error generating image path:', err);
+      console.error('Error generating gallery image path:', err);
       return this.placeholderImagePath;
     }
   }
@@ -174,7 +177,7 @@ export class ProductDetailsComponent implements OnInit, OnDestroy {
       console.warn('Image failed to load:', imgElement.src);
 
       // Prevent infinite loop by checking if we're already using the placeholder
-      if (imgElement.src !== this.placeholderImagePath) {
+      if (!imgElement.src.includes('placeholder-image.svg')) {
         imgElement.src = this.placeholderImagePath;
       }
     }
