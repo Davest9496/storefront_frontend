@@ -1,10 +1,11 @@
-import { Component, HostListener } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { CartService } from '@app/services/cart.service';
 import { CartComponent } from '../cart/cart.component';
 import { CartState, CartItem } from '@app/interfaces/cart.interface';
 import { AuthService } from '../../services/auth.service';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-header',
@@ -13,32 +14,30 @@ import { AuthService } from '../../services/auth.service';
   standalone: true,
   imports: [CommonModule, RouterModule, CartComponent],
 })
-export class HeaderComponent {
+export class HeaderComponent implements OnInit {
   isMenuOpen = false;
   isProfileDropdownOpen = false;
   hoverTimeout: any = null;
+  isLoggedIn$!: Observable<boolean>;
 
   constructor(
     public cartService: CartService,
-    public authService: AuthService
+    public authService: AuthService,
   ) {}
+
+  ngOnInit(): void {
+    // Initialize the isLoggedIn$ observable
+    this.isLoggedIn$ = this.authService.isLoggedIn();
+  }
 
   toggleCart(): void {
     this.cartService.toggleCart();
   }
 
-  // Add new method to toggle profile dropdown
+  // Toggle profile dropdown
   toggleProfileDropdown(event: Event): void {
     event.stopPropagation();
     this.isProfileDropdownOpen = !this.isProfileDropdownOpen;
-  }
-
-  // Close profile dropdown when clicking outside
-  @HostListener('window:click')
-  onWindowClick(): void {
-    if (this.isProfileDropdownOpen) {
-      this.isProfileDropdownOpen = false;
-    }
   }
 
   getItemCount(state: CartState): number {
@@ -94,6 +93,12 @@ export class HeaderComponent {
       clearTimeout(this.hoverTimeout);
       this.hoverTimeout = null;
     }
+  }
+
+  // Logout function that also closes the dropdown
+  logout(): void {
+    this.authService.logout();
+    this.closeProfileDropdown();
   }
 
   // Close menu on window resize (tablet and above)

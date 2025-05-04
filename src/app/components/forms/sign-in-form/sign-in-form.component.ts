@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule, NgModel } from '@angular/forms';
+import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { AuthService } from '../../../services/auth.service';
+import { AuthService, LoginCredentials } from '../../../services/auth.service';
 
 @Component({
   selector: 'app-sign-in-form',
@@ -23,11 +23,7 @@ import { AuthService } from '../../../services/auth.service';
           [class.error]="email.invalid && email.touched"
           placeholder="Enter your email"
         />
-        <div
-          class="error-message"
-          *ngIf="email.touched && email.invalid"
-          @fadeInOut
-        >
+        <div class="error-message" *ngIf="email.touched && email.invalid">
           <span *ngIf="email.errors?.['required']">Email is required</span>
           <span *ngIf="email.errors?.['email']"
             >Please enter a valid email</span
@@ -48,11 +44,7 @@ import { AuthService } from '../../../services/auth.service';
           [class.error]="password.invalid && password.touched"
           placeholder="Enter your password"
         />
-        <div
-          class="error-message"
-          *ngIf="password.touched && password.invalid"
-          @fadeInOut
-        >
+        <div class="error-message" *ngIf="password.touched && password.invalid">
           <span *ngIf="password.errors?.['required']"
             >Password is required</span
           >
@@ -62,6 +54,11 @@ import { AuthService } from '../../../services/auth.service';
         </div>
       </div>
 
+      <!-- Error message from API -->
+      <div class="error-message api-error" *ngIf="errorMessage">
+        {{ errorMessage }}
+      </div>
+
       <button
         type="submit"
         [disabled]="signInForm.invalid || isLoading"
@@ -69,34 +66,62 @@ import { AuthService } from '../../../services/auth.service';
       >
         {{ isLoading ? 'Signing in...' : 'SIGN IN' }}
       </button>
+
+      <div class="form-footer">
+        <p>Don't have an account? <a routerLink="/auth/signup">Sign up</a></p>
+      </div>
     </form>
   `,
   styleUrls: ['./sign-in-form.component.scss'],
 })
 export class SignInFormComponent {
-  formData = {
+  formData: LoginCredentials = {
     email: '',
     password: '',
   };
 
   isLoading = false;
+  errorMessage = '';
 
-  constructor(private authService: AuthService, private router: Router) {}
+  constructor(
+    private authService: AuthService,
+    private router: Router,
+  ) {}
 
-  async onSubmit() {
-    if (this.isLoading) return;
+  onSubmit() {
+    if (this.isLoading || !this.formData.email || !this.formData.password) {
+      return;
+    }
 
     this.isLoading = true;
-    try {
-      // TODO: Implement actual authentication logic
-      console.log('Sign in attempt with:', this.formData);
-      this.isLoading = false;
-      // Navigate back or to home
-      const previousUrl = sessionStorage.getItem('previousUrl') || '/';
-      await this.router.navigateByUrl(previousUrl);
-    } catch (error) {
-      console.error('Sign in error:', error);
-      this.isLoading = false;
-    }
+    this.errorMessage = '';
+
+    this.authService.login(this.formData).subscribe({
+      next: () => {
+        this.isLoading = false;
+        // Redirect to stored URL or home
+        const redirectUrl = sessionStorage.getItem('redirectUrl') || '/';
+        sessionStorage.removeItem('redirectUrl');
+        this.router.navigateByUrl(redirectUrl);
+      },
+      error: (error) => {
+        this.isLoading = false;
+
+        // Check if there's a direct error message from the server
+        if (error.error && typeof error.error === 'string') {
+          this.errorMessage = error.error;
+        }
+        // Check if error has a message property
+        else if (error.message) {
+          this.errorMessage = error.message;
+        }
+        // Fallback to a generic message
+        else {
+          this.errorMessage = 'Failed to sign in. Please try again later.';
+        }
+
+        console.error('Login error:', error);
+      },
+    });
   }
 }

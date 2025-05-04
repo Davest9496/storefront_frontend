@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { AuthService } from '../../../services/auth.service';
+import { AuthService, SignupData } from '../../../services/auth.service';
 
 @Component({
   selector: 'app-sign-up-form',
@@ -10,27 +10,61 @@ import { AuthService } from '../../../services/auth.service';
   imports: [CommonModule, FormsModule],
   template: `
     <form class="sign-up-form" (ngSubmit)="onSubmit()" #signUpForm="ngForm">
-      <div class="form-group">
-        <label for="name">Full Name</label>
-        <input
-          type="text"
-          id="name"
-          name="name"
-          [(ngModel)]="formData.name"
-          required
-          minlength="2"
-          #name="ngModel"
-          [class.error]="name.invalid && (name.dirty || name.touched)"
-          placeholder="Enter your full name"
-        />
-        <div
-          class="error-message"
-          *ngIf="name.invalid && (name.dirty || name.touched)"
-        >
-          <span *ngIf="name.errors?.['required']">Name is required</span>
-          <span *ngIf="name.errors?.['minlength']"
-            >Name must be at least 2 characters</span
+      <div class="form-row">
+        <div class="form-group">
+          <label for="firstName">First Name</label>
+          <input
+            type="text"
+            id="firstName"
+            name="firstName"
+            [(ngModel)]="formData.firstName"
+            required
+            minlength="2"
+            #firstName="ngModel"
+            [class.error]="
+              firstName.invalid && (firstName.dirty || firstName.touched)
+            "
+            placeholder="John"
+          />
+          <div
+            class="error-message"
+            *ngIf="firstName.invalid && (firstName.dirty || firstName.touched)"
           >
+            <span *ngIf="firstName.errors?.['required']"
+              >First name is required</span
+            >
+            <span *ngIf="firstName.errors?.['minlength']"
+              >First name must be at least 2 characters</span
+            >
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="lastName">Last Name</label>
+          <input
+            type="text"
+            id="lastName"
+            name="lastName"
+            [(ngModel)]="formData.lastName"
+            required
+            minlength="2"
+            #lastName="ngModel"
+            [class.error]="
+              lastName.invalid && (lastName.dirty || lastName.touched)
+            "
+            placeholder="Smith"
+          />
+          <div
+            class="error-message"
+            *ngIf="lastName.invalid && (lastName.dirty || lastName.touched)"
+          >
+            <span *ngIf="lastName.errors?.['required']"
+              >Last name is required</span
+            >
+            <span *ngIf="lastName.errors?.['minlength']"
+              >Last name must be at least 2 characters</span
+            >
+          </div>
         </div>
       </div>
 
@@ -45,7 +79,7 @@ import { AuthService } from '../../../services/auth.service';
           email
           #email="ngModel"
           [class.error]="email.invalid && (email.dirty || email.touched)"
-          placeholder="Enter your email"
+          placeholder="john.smith@example.com"
         />
         <div
           class="error-message"
@@ -66,7 +100,8 @@ import { AuthService } from '../../../services/auth.service';
           name="password"
           [(ngModel)]="formData.password"
           required
-          minlength="6"
+          minlength="8"
+          pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)[a-zA-Z\\d\\w\\W]{8,}$"
           #password="ngModel"
           [class.error]="
             password.invalid && (password.dirty || password.touched)
@@ -80,36 +115,47 @@ import { AuthService } from '../../../services/auth.service';
           <span *ngIf="password.errors?.['required']"
             >Password is required</span
           >
-          <span *ngIf="password.errors?.['minlength']"
-            >Password must be at least 6 characters</span
+          <span
+            *ngIf="
+              password.errors?.['minlength'] || password.errors?.['pattern']
+            "
+            >Password must be at least 8 characters and include uppercase,
+            lowercase, and number</span
           >
         </div>
       </div>
 
       <div class="form-group">
-        <label for="confirmPassword">Confirm Password</label>
+        <label for="passwordConfirm">Confirm Password</label>
         <input
           type="password"
-          id="confirmPassword"
-          name="confirmPassword"
-          [(ngModel)]="formData.confirmPassword"
+          id="passwordConfirm"
+          name="passwordConfirm"
+          [(ngModel)]="formData.passwordConfirm"
           required
-          #confirmPassword="ngModel"
+          #passwordConfirm="ngModel"
           [class.error]="
-            confirmPassword.value !== formData.password &&
-            (confirmPassword.dirty || confirmPassword.touched)
+            (passwordConfirm.value !== formData.password &&
+              (passwordConfirm.dirty || passwordConfirm.touched)) ||
+            passwordMismatch
           "
           placeholder="Confirm your password"
         />
         <div
           class="error-message"
           *ngIf="
-            confirmPassword.value !== formData.password &&
-            (confirmPassword.dirty || confirmPassword.touched)
+            (passwordConfirm.value !== formData.password &&
+              (passwordConfirm.dirty || passwordConfirm.touched)) ||
+            passwordMismatch
           "
         >
           Passwords do not match
         </div>
+      </div>
+
+      <!-- API Error message -->
+      <div class="error-message api-error" *ngIf="errorMessage">
+        {{ errorMessage }}
       </div>
 
       <button
@@ -117,42 +163,70 @@ import { AuthService } from '../../../services/auth.service';
         [disabled]="
           signUpForm.invalid ||
           isLoading ||
-          formData.password !== formData.confirmPassword
+          formData.password !== formData.passwordConfirm
         "
         class="submit-btn"
       >
-        {{ isLoading ? 'Signing up...' : 'Sign Up' }}
+        {{ isLoading ? 'Creating Account...' : 'CREATE ACCOUNT' }}
       </button>
+
+      <div class="form-footer">
+        <p>Already have an account? <a routerLink="/auth/login">Sign in</a></p>
+      </div>
     </form>
   `,
   styleUrls: ['./sign-up-form.component.scss'],
 })
 export class SignUpFormComponent {
-  formData = {
-    name: '',
+  formData: SignupData = {
+    firstName: '',
+    lastName: '',
     email: '',
     password: '',
-    confirmPassword: '',
+    passwordConfirm: '',
   };
 
   isLoading = false;
+  errorMessage = '';
+  passwordMismatch = false;
 
-  constructor(private authService: AuthService, private router: Router) {}
+  constructor(
+    private authService: AuthService,
+    private router: Router,
+  ) {}
 
-  async onSubmit() {
-    if (this.isLoading) return;
+  onSubmit() {
+    if (this.isLoading || this.validateForm() === false) {
+      return;
+    }
 
     this.isLoading = true;
-    try {
-      // TODO: Implement actual registration logic
-      console.log('Sign up attempt with:', this.formData);
-      this.isLoading = false;
-      // Navigate back or to home
-      const previousUrl = sessionStorage.getItem('previousUrl') || '/';
-      await this.router.navigateByUrl(previousUrl);
-    } catch (error) {
-      console.error('Sign up error:', error);
-      this.isLoading = false;
+    this.errorMessage = '';
+
+    this.authService.signup(this.formData).subscribe({
+      next: () => {
+        this.isLoading = false;
+        // Redirect to stored URL or home
+        const redirectUrl = sessionStorage.getItem('redirectUrl') || '/';
+        sessionStorage.removeItem('redirectUrl');
+        this.router.navigateByUrl(redirectUrl);
+      },
+      error: (error) => {
+        this.isLoading = false;
+        this.errorMessage =
+          error.message || 'Failed to create account. Please try again.';
+      },
+    });
+  }
+
+  validateForm(): boolean {
+    // Check if passwords match
+    if (this.formData.password !== this.formData.passwordConfirm) {
+      this.passwordMismatch = true;
+      return false;
     }
+
+    this.passwordMismatch = false;
+    return true;
   }
 }

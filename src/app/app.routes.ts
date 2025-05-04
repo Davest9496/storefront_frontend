@@ -1,6 +1,7 @@
 // app.routes.ts
 import { Routes } from '@angular/router';
 import { ScrollGuard } from './guards/scroll.guard';
+import { AuthGuard } from './guards/auth.guard'; // Import AuthGuard if not already imported
 
 export const routes: Routes = [
   {
@@ -42,6 +43,13 @@ export const routes: Routes = [
     path: 'auth',
     loadChildren: () =>
       import('./pages/auth/auth.routes').then((m) => m.AUTH_ROUTES),
+  },
+  // Add account routes
+  {
+    path: 'account',
+    loadChildren: () =>
+      import('./pages/account/account.routes').then((m) => m.ACCOUNT_ROUTES),
+    canActivate: [AuthGuard], // Protected by AuthGuard
   },
   // Add API test route
   {

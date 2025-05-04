@@ -3,6 +3,7 @@ import { provideRouter, withComponentInputBinding } from '@angular/router';
 import {
   provideHttpClient,
   withInterceptorsFromDi,
+  HTTP_INTERCEPTORS,
 } from '@angular/common/http';
 import {
   provideClientHydration,
@@ -11,6 +12,7 @@ import {
 import { routes } from './app.routes';
 import { ScrollService } from './services/scroll.service';
 import { API_INTERCEPTORS } from './interceptors';
+import { AuthInterceptor } from './interceptors/auth.interceptor';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -27,6 +29,13 @@ export const appConfig: ApplicationConfig = {
 
     // Add your API interceptors if needed
     ...API_INTERCEPTORS,
+
+    // Register Auth interceptor
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthInterceptor,
+      multi: true,
+    },
 
     ScrollService,
   ],

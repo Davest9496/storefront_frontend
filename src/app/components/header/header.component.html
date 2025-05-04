@@ -60,67 +60,90 @@
         </ul>
 
         <!-- Profile -->
-<div class="header_profile"
-     (mouseenter)="onProfileHover(true)"
-     (mouseleave)="onProfileHover(false)">
-    <button 
-        class="header_profile-btn"
-        (click)="toggleProfileDropdown($event)"
-        aria-label="User profile menu"
-        [attr.aria-expanded]="isProfileDropdownOpen"
-    >
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="header_profile-icon">
-            <path 
-                fill="currentColor" 
-                d="M12 4a4 4 0 1 0 0 8 4 4 0 0 0 0-8zM6 8a6 6 0 1 1 12 0A6 6 0 0 1 6 8zm2 10a3 3 0 0 0-3 3 1 1 0 1 1-2 0 5 5 0 0 1 5-5h8a5 5 0 0 1 5 5 1 1 0 1 1-2 0 3 3 0 0 0-3-3H8z"
-            />
-        </svg>
-    </button>
-    
-    <div 
-        class="header_profile-dropdown" 
-        [class.active]="isProfileDropdownOpen"
-        (click)="$event.stopPropagation()"
-    >
-        @if (authService.isLoggedIn() | async) {
-            <div class="header_profile-info">
-                <div class="header_profile-avatar">
-                    <svg viewBox="0 0 24 24" class="header_profile-avatar-icon">
-                        <path 
-                            fill="currentColor" 
-                            d="M12 4a4 4 0 1 0 0 8 4 4 0 0 0 0-8zM6 8a6 6 0 1 1 12 0A6 6 0 0 1 6 8zm2 10a3 3 0 0 0-3 3 1 1 0 1 1-2 0 5 5 0 0 1 5-5h8a5 5 0 0 1 5 5 1 1 0 1 1-2 0 3 3 0 0 0-3-3H8z"
-                        />
-                    </svg>
-                </div>
-                <span class="header_profile-name">
-                    {{ (authService.getCurrentUser() | async)?.name }}
-                </span>
+        <div class="header_profile"
+             (mouseenter)="onProfileHover(true)"
+             (mouseleave)="onProfileHover(false)">
+            <button 
+                class="header_profile-btn"
+                (click)="toggleProfileDropdown($event)"
+                aria-label="User profile menu"
+                [attr.aria-expanded]="isProfileDropdownOpen"
+            >
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="header_profile-icon">
+                    <path 
+                        fill="currentColor" 
+                        d="M12 4a4 4 0 1 0 0 8 4 4 0 0 0 0-8zM6 8a6 6 0 1 1 12 0A6 6 0 0 1 6 8zm2 10a3 3 0 0 0-3 3 1 1 0 1 1-2 0 5 5 0 0 1 5-5h8a5 5 0 0 1 5 5 1 1 0 1 1-2 0 3 3 0 0 0-3-3H8z"
+                    />
+                </svg>
+            </button>
+            
+            <div 
+                class="header_profile-dropdown" 
+                [class.active]="isProfileDropdownOpen"
+                (click)="$event.stopPropagation()"
+            >
+                <!-- Logged-in state -->
+                <ng-container *ngIf="isLoggedIn$ | async; else loggedOutTemplate">
+                    <div class="header_profile-info">
+                        <div class="header_profile-avatar">
+                            <svg viewBox="0 0 24 24" class="header_profile-avatar-icon">
+                                <path 
+                                    fill="currentColor" 
+                                    d="M12 4a4 4 0 1 0 0 8 4 4 0 0 0 0-8zM6 8a6 6 0 1 1 12 0A6 6 0 0 1 6 8zm2 10a3 3 0 0 0-3 3 1 1 0 1 1-2 0 5 5 0 0 1 5-5h8a5 5 0 0 1 5 5 1 1 0 1 1-2 0 3 3 0 0 0-3-3H8z"
+                                />
+                            </svg>
+                        </div>
+                        <span class="header_profile-name">
+                            <ng-container *ngIf="authService.getCurrentUser() | async as user">
+                                {{ user.firstName }} {{ user.lastName }}
+                            </ng-container>
+                        </span>
+                    </div>
+                    <hr class="header_profile-divider">
+                    <ul class="header_profile-menu">
+                        <li>
+                            <a routerLink="/account/profile" 
+                               (click)="closeProfileDropdown()">
+                                My Profile
+                            </a>
+                        </li>
+                        <li>
+                            <a routerLink="/account/orders" 
+                               (click)="closeProfileDropdown()">
+                                My Orders
+                            </a>
+                        </li>
+                        <li>
+                            <a routerLink="/account/change-password" 
+                               (click)="closeProfileDropdown()">
+                                Change Password
+                            </a>
+                        </li>
+                        <li>
+                            <button (click)="logout()">
+                                Logout
+                            </button>
+                        </li>
+                    </ul>
+                </ng-container>
+                
+                <!-- Logged-out state -->
+                <ng-template #loggedOutTemplate>
+                    <ul class="header_profile-menu">
+                        <li>
+                            <a routerLink="/auth/login" (click)="closeProfileDropdown()">
+                                Login
+                            </a>
+                        </li>
+                        <li>
+                            <a routerLink="/auth/signup" (click)="closeProfileDropdown()">
+                                Register
+                            </a>
+                        </li>
+                    </ul>
+                </ng-template>
             </div>
-            <hr class="header_profile-divider">
-            <ul class="header_profile-menu">
-                <li>
-                    <a routerLink="/profile" 
-                   (click)="closeProfileDropdown()">Update Profile</a>
-                </li>
-                <li>
-                    <a routerLink="/profile/password" (click)="closeProfileDropdown()">Change Password</a>
-                </li>
-                <li>
-                    <button (click)="authService.logout()"; (click)="closeProfileDropdown()">Logout</button>
-                </li>
-            </ul>
-        } @else {
-            <ul class="header_profile-menu">
-                <li>
-                    <a routerLink="/auth/login" (click)="closeProfileDropdown()">Login</a>
-                </li>
-                <li>
-                    <a routerLink="/auth/register" (click)="closeProfileDropdown()">Register</a>
-                </li>
-            </ul>
-        }
-    </div>
-</div>
+        </div>
         
         <!-- Shopping Cart Button -->
         <button 
