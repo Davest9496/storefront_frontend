@@ -1,13 +1,19 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { AuthService, LoginCredentials } from '../../../services/auth.service';
+import { InlinePasswordToggleDirective } from '../../../shared/inline-password-toggle.directive';
 
 @Component({
   selector: 'app-sign-in-form',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [
+    CommonModule,
+    FormsModule,
+    RouterModule,
+    InlinePasswordToggleDirective,
+  ],
   template: `
     <form class="sign-in-form" (ngSubmit)="onSubmit()" #signInForm="ngForm">
       <div class="form-group">
@@ -43,6 +49,7 @@ import { AuthService, LoginCredentials } from '../../../services/auth.service';
           #password="ngModel"
           [class.error]="password.invalid && password.touched"
           placeholder="Enter your password"
+          appInlinePasswordToggle
         />
         <div class="error-message" *ngIf="password.touched && password.invalid">
           <span *ngIf="password.errors?.['required']"

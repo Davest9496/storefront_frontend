@@ -1,13 +1,19 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { AuthService, SignupData } from '../../../services/auth.service';
+import { InlinePasswordToggleDirective } from '../../../shared/inline-password-toggle.directive';
 
 @Component({
   selector: 'app-sign-up-form',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [
+    CommonModule,
+    FormsModule,
+    RouterModule,
+    InlinePasswordToggleDirective,
+  ],
   template: `
     <form class="sign-up-form" (ngSubmit)="onSubmit()" #signUpForm="ngForm">
       <div class="form-row">
@@ -107,6 +113,7 @@ import { AuthService, SignupData } from '../../../services/auth.service';
             password.invalid && (password.dirty || password.touched)
           "
           placeholder="Create a password"
+          appInlinePasswordToggle
         />
         <div
           class="error-message"
@@ -140,6 +147,7 @@ import { AuthService, SignupData } from '../../../services/auth.service';
             passwordMismatch
           "
           placeholder="Confirm your password"
+          appInlinePasswordToggle
         />
         <div
           class="error-message"

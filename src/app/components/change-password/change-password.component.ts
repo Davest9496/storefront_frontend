@@ -2,8 +2,9 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { environment } from '../../../environments/environment';
+import { InlinePasswordToggleDirective } from '../../shared/inline-password-toggle.directive';
 
 interface PasswordFormData {
   currentPassword: string;
@@ -14,7 +15,12 @@ interface PasswordFormData {
 @Component({
   selector: 'app-change-password',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [
+    CommonModule,
+    FormsModule,
+    RouterModule,
+    InlinePasswordToggleDirective,
+  ],
   template: `
     <div class="change-password-page">
       <div class="password-container">
@@ -32,6 +38,7 @@ interface PasswordFormData {
               #currentPassword="ngModel"
               [class.error]="currentPassword.invalid && currentPassword.touched"
               placeholder="Enter your current password"
+              appInlinePasswordToggle
             />
             <div
               class="error-message"
@@ -56,6 +63,7 @@ interface PasswordFormData {
               #newPassword="ngModel"
               [class.error]="newPassword.invalid && newPassword.touched"
               placeholder="Create a new password"
+              appInlinePasswordToggle
             />
             <div
               class="error-message"
@@ -90,6 +98,7 @@ interface PasswordFormData {
                 formData.newPassword !== formData.passwordConfirm
               "
               placeholder="Confirm your new password"
+              appInlinePasswordToggle
             />
             <div
               class="error-message"
